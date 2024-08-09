@@ -1,0 +1,112 @@
+.authPage {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	height: 100vh;
+
+	.authContainer {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		width: 100%;
+		height: 100%;
+
+		.loginPage {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			justify-content: center;
+			width: 400px;
+			// height: 100%;
+			padding: 20px;
+			background-color: white;
+			border-radius: 10px;
+			box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+
+			.headerSection {
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				justify-content: center;
+				width: 100%;
+				margin-bottom: 20px;
+
+				h1 {
+					font-size: 2rem;
+					font-weight: 600;
+					margin-bottom: 10px;
+				}
+
+				h3 {
+					font-size: 1.2rem;
+					font-weight: 400;
+					color: #666666;
+				}
+			}
+
+			form {
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				justify-content: center;
+				width: 100%;
+				margin-bottom: 20px;
+
+				.inputField {
+					display: flex;
+					flex-direction: column;
+					align-items: center;
+					justify-content: center;
+					width: 100%;
+					margin-bottom: 10px;
+
+					input {
+						width: 100%;
+						padding: 10px;
+						border-radius: 5px;
+						border: 1px solid #cccccc;
+						font-size: 1rem;
+						font-weight: 400;
+						color: #666666;
+					}
+				}
+
+				small {
+					display: flex;
+					flex-direction: column;
+					align-items: center;
+					justify-content: center;
+					width: 100%;
+					margin-top: 10px;
+
+					a {
+						font-size: 1rem;
+						font-weight: 400;
+						color: #666666;
+					}
+				}
+
+				.actionsSection {
+					display: flex;
+					flex-direction: column;
+					align-items: center;
+					justify-content: center;
+					width: 100%;
+					margin-top: 20px;
+
+					button {
+						width: 100%;
+						padding: 10px;
+						border-radius: 5px;
+						border: 1px solid #cccccc;
+						font-size: 1rem;
+						font-weight: 400;
+						color: #666666;
+					}
+				}
+			}
+		}
+	}
+}
