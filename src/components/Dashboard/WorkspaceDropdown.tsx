@@ -13,7 +13,7 @@ const WorkspaceDropdown = ({ item, selectedWorkspaceId, setSelectedWorkspaceId }
 					<div className='row'>
 						<i className="fa-solid fa-building"></i>
 						<span>
-							{item.name}
+							{item.title}
 						</span>
 					</div>
 					<i className='fa-solid fa-chevron-down'

@@ -27,7 +27,7 @@
 			}
 
 			p {
-				font-size: 14px;
+				font-size: 18px;
 				font-weight: 600;
 			}
 
@@ -58,23 +58,39 @@
 					font-size: 16px;
 					font-weight: 600;
 				}
+
+				.createProjectBtn {
+					display: flex;
+					align-items: center;
+					gap: 5px;
+					border-radius: 5px;
+					padding: 5px;
+
+					&:hover {
+						background-color: #333c44;
+					}
+				}
 			}
 
 			&__content {
 				display: flex;
 				flex-direction: column;
-				// border: 1px solid red;
+				gap: 10px;
 
 				.projectCard {
 					display: flex;
 					align-items: center;
 					border-radius: 5px;
-					// border: 1px solid red;
 					padding: 5px;
+					color: #fff;
 
 					&:hover {
 						background-color: #333c44;
 						cursor: pointer;
+					}
+
+					&.active {
+						background-color: #333c44;
 					}
 
 					p {
@@ -171,7 +187,7 @@
 			overflow-x: auto;
 			flex-wrap: nowrap;
 
-			.cardList {
+			.board {
 				display: flex;
 				flex-direction: column;
 				width: 300px;

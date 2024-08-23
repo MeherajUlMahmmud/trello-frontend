@@ -1,8 +1,12 @@
 import React, { Suspense, lazy } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+
+import { aboutRoute, contactUsRoute, dashboardRoute, homeRoute, loginRoute, profileRoute, signUpRoute } from './utils/app_routes';
+
 import { ErrorBoundary } from './components/ErrorBoundary';
 import { Spinner } from './components/Loading/Spinner';
 import Navbar from './components/Navbar/Navbar';
+import SignUpPage from './pages/auth/SignUpPage';
 
 // Lazy-loaded pages
 const HomePage = lazy(() => import('./pages/HomePage'));
@@ -20,13 +24,15 @@ const App: React.FC = () => {
         <Navbar />
         <Suspense fallback={<Spinner />}>
           <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/dashboard" element={<DashboardPage />} />
-            <Route path="/workspace/:id" element={<WorkspaceDetailsPage />} />
-            <Route path="/about" element={<AboutPage />} />
-            <Route path="/contact" element={<ContactUsPage />} />
-            <Route path="/auth/login" element={<LoginPage />} />
-            <Route path="/profile" element={<ProfilePage />} />
+            <Route path={homeRoute} element={<HomePage />} />
+            <Route path={dashboardRoute} element={<DashboardPage />} />
+            <Route path="/workspace/:id/:projectId" element={<WorkspaceDetailsPage />} />
+            <Route path={aboutRoute} element={<AboutPage />} />
+            <Route path={contactUsRoute} element={<ContactUsPage />} />
+            <Route path={profileRoute} element={<ProfilePage />} />
+
+            <Route path={loginRoute} element={<LoginPage />} />
+            <Route path={signUpRoute} element={<SignUpPage />} />
           </Routes>
         </Suspense>
       </Router>

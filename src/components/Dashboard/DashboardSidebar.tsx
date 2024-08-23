@@ -37,6 +37,7 @@ const DashboardSidebar = ({ workspaceList, selectedWorkspaceId, setSelectedWorks
 							setSelectedWorkspaceId={setSelectedWorkspaceId}
 						/>
 					))
+
 				}
 			</div>
 		</div>

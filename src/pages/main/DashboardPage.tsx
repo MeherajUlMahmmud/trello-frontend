@@ -1,50 +1,91 @@
-import React, { useState } from 'react'
-import DashboardSidebar from '../../components/Dashboard/DashboardSidebar';
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+
+import { workspaceRepository } from '../../repositories/workspace';
+import { handleAPIError } from '../../repositories/utils';
+import { closeModal, logout } from '../../utils/utils';
+import { loadLocalStorage } from '../../utils/persistLocalStorage';
+
 import '../../styles/dashboard.scss';
+
 import WorkspaceDetail from '../../components/Dashboard/WorkspaceDetail';
-import { closeModal } from '../../utils/utils';
+import DashboardSidebar from '../../components/Dashboard/DashboardSidebar';
 
 const DashboardPage = () => {
-  const [workspaceList] = useState<any[]>([
-    {
-      id: 1,
-      name: 'Workspace 1',
-      description: 'Workspace 1 Description',
-    },
-    {
-      id: 2,
-      name: 'Workspace 2',
-      description: 'Workspace 2 Description',
-    },
-    {
-      id: 3,
-      name: 'Workspace 3',
-      description: 'Workspace 3 Description',
-    },
-    {
-      id: 4,
-      name: 'Workspace 4',
-      description: 'Workspace 4 Description',
-    }
-  ]);
-  const [selectedWorkspaceId, setSelectedWorkspaceId] = useState<any>(workspaceList[0].id);
+  const navigate = useNavigate();
+
+  const user = loadLocalStorage('user');
+  const tokens = loadLocalStorage('tokens');
+
+  const workspaceFilters = {
+    is_active: true,
+    is_deleted: false,
+  }
+
+  const [workspaceList, setWorkspaceList] = useState<any[]>([]);
+  const [selectedWorkspaceId, setSelectedWorkspaceId] = useState<any>(null);
+
+  const [isLoading, setIsLoading] = useState(true);
 
   const [showCreateProjectModal, setShowCreateProjectModal] = useState(false);
   const [showUpdateWorkspaceModal, setShowUpdateWorkspaceModal] = useState(false);
 
+  useEffect(() => {
+    if (!user || !tokens) {
+      logout(navigate);
+    }
+  }, [navigate]);
+
+  useEffect(() => {
+    fetchWorkspaces();
+  }, []);
+
+  const fetchWorkspaces = async () => {
+    try {
+      const response = await workspaceRepository.getWorkspaces(workspaceFilters);
+      console.log(response);
+      const data = response.data.data;
+
+      setWorkspaceList(data);
+
+      if (data.length > 0) {
+        setSelectedWorkspaceId(response.data.data[0].id);
+      }
+      setIsLoading(false);
+    } catch (error: any) {
+      handleAPIError(error, navigate);
+      setIsLoading(false);
+    }
+  };
+
   return (
     <>
       <div className='maxWidth dashboardPage'>
-        <DashboardSidebar
-          workspaceList={workspaceList}
-          selectedWorkspaceId={selectedWorkspaceId}
-          setSelectedWorkspaceId={setSelectedWorkspaceId}
-        />
-        <WorkspaceDetail
-          selectedWorkspaceId={selectedWorkspaceId}
-          setShowCreateProjectModal={setShowCreateProjectModal}
-          setShowUpdateWorkspaceModal={setShowUpdateWorkspaceModal}
-        />
+
+        {
+          isLoading ? (
+            <i className="fa fa-spinner fa-spin"></i>
+          ) : (
+            workspaceList.length > 0 ? (
+              <>
+                <DashboardSidebar
+                  workspaceList={workspaceList}
+                  selectedWorkspaceId={selectedWorkspaceId}
+                  setSelectedWorkspaceId={setSelectedWorkspaceId}
+                />
+                <WorkspaceDetail
+                  selectedWorkspaceId={selectedWorkspaceId}
+                  setShowCreateProjectModal={setShowCreateProjectModal}
+                  setShowUpdateWorkspaceModal={setShowUpdateWorkspaceModal}
+                />
+              </>
+            ) : (
+              <div className='maxWidth'>
+                <h1>No Workspaces</h1>
+              </div>
+            )
+          )
+        }
       </div>
       {
         showCreateProjectModal &&

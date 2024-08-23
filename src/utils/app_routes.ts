@@ -5,3 +5,9 @@ export const recoverPasswordRoute = "/auth/recover-password";
 export const logoutRoute = "/auth/logout";
 
 export const homeRoute = "/";
+
+export const dashboardRoute = "/dashboard";
+
+export const aboutRoute = "/about";
+export const contactUsRoute = "/contact";
+export const profileRoute = "/profile";

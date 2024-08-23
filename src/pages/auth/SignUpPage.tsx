@@ -1,34 +1,32 @@
 import { useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
 
-import { appName } from '../../utils/constants'
-import { dashboardRoute, forgotPasswordRoute, signUpRoute } from '../../utils/app_routes'
-import { saveLocalStorage } from '../../utils/persistLocalStorage'
 import { authRepository } from '../../repositories/auth';
+import { loginRoute } from '../../utils/app_routes';
+import { appName } from '../../utils/constants';
 import { ButtonType } from '../../types/Button';
 
 import '../../styles/auth.scss';
 
-import ErrorMessage from '../../components/Common/ErrorMessage';
 import Button from '../../components/Common/Button';
+import ErrorMessage from '../../components/Common/ErrorMessage';
 
-const LoginPage = () => {
-	const navigate = useNavigate();
-	const location = useLocation();
-
-	const [loginData, setLoginData] = useState({
+const SignUpPage = () => {
+	const [signUpData, setSignUpData] = useState({
+		first_name: '',
+		last_name: '',
 		email: '',
-		password: ''
+		password1: '',
+		password2: ''
 	});
 	const [loading, setLoading] = useState(false)
 	const [isError, setIsError] = useState(false)
 	const [errorMessage, setErrorMessage] = useState('')
 
 
-	const handleChangeLoginData = (e: any) => {
+	const handleChangeSignUpData = (e: any) => {
 		const { name, value } = e.target;
-		setLoginData({
-			...loginData,
+		setSignUpData({
+			...signUpData,
 			[name]: value
 		})
 	};
@@ -38,18 +36,16 @@ const LoginPage = () => {
 
 		if (loading) return;
 
+		console.log("handleSubmit");
+
 		setIsError(false);
 		setErrorMessage('');
 		setLoading(true);
 
 		try {
-			const response = await authRepository.login(loginData);
+			const response = await authRepository.signUp(signUpData);
 			console.log(response);
 			setLoading(false);
-			saveLocalStorage("user", response.data.user);
-			saveLocalStorage("tokens", response.data.tokens);
-			// navigate('/');
-			navigate(location?.state?.from?.pathname || dashboardRoute);
 		} catch (error: any) {
 			console.log(error);
 			setLoading(false);
@@ -61,11 +57,11 @@ const LoginPage = () => {
 	return (
 		<div className='authPage maxWidth'>
 			<div className="authContainer">
-				<div className="loginPage">
+				<div className="signUpPage">
 					<div className="headerSection">
 						<h1>{appName}</h1>
 						<h3>
-							Sign in to start your session
+							Get Started
 						</h3>
 					</div>
 					<form method="post" className='loginForm'
@@ -73,13 +69,33 @@ const LoginPage = () => {
 					>
 						<div className="inputField">
 							<input
+								type="text"
+								className="input"
+								placeholder="First Name"
+								name="first_name"
+								onChange={(e) => handleChangeSignUpData(e)}
+								required
+								autoFocus
+							/>
+						</div>
+						<div className="inputField">
+							<input
+								type="text"
+								className="input"
+								placeholder="Last Name"
+								name="last_name"
+								onChange={(e) => handleChangeSignUpData(e)}
+								required
+							/>
+						</div>
+						<div className="inputField">
+							<input
 								type="email"
 								className="input"
 								placeholder="Email Address"
 								name="email"
-								onChange={(e) => handleChangeLoginData(e)}
+								onChange={(e) => handleChangeSignUpData(e)}
 								required
-								autoFocus
 							/>
 						</div>
 						<div className="inputField">
@@ -87,24 +103,28 @@ const LoginPage = () => {
 								type="password"
 								className="input"
 								placeholder="Password"
-								name="password"
-								onChange={(e) => handleChangeLoginData(e)}
+								name="password1"
+								onChange={(e) => handleChangeSignUpData(e)}
 								required
 							/>
 						</div>
-
-						<small className="forgotPassword align-right">
-							<a href={forgotPasswordRoute}>
-								Forgot your password?
-							</a>
-						</small>
+						<div className="inputField">
+							<input
+								type="password"
+								className="input"
+								placeholder="Confirm Password"
+								name="password2"
+								onChange={(e) => handleChangeSignUpData(e)}
+								required
+							/>
+						</div>
 						{
 							!loading && isError && <ErrorMessage errorMessage={errorMessage} />
 						}
 
 						<div className="actionsSection">
 							<Button
-								text={loading ? 'Loading...' : 'Sign In'}
+								text={loading ? 'Loading...' : 'Sign Up'}
 								type={ButtonType.Submit}
 								isDisabled={loading}
 								className={`button w-100 ${loading && 'disabled'}`}
@@ -112,9 +132,9 @@ const LoginPage = () => {
 						</div>
 					</form>
 
-					<small className="signUp align-center">
-						<a href={signUpRoute} className=''>
-							Don't have an account? Sign Up
+					<small className="">
+						<a href={loginRoute} className=''>
+							Already have an account? Sign In
 						</a>
 					</small>
 				</div>
@@ -123,4 +143,4 @@ const LoginPage = () => {
 	)
 }
 
-export default LoginPage;
+export default SignUpPage

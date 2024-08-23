@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import '../../styles/navbar.scss';
 import NavbarDropdown from './NavbarDropdown';
 import { DropdownItem } from '../../types/Navbar';
-import { loginRoute, signUpRoute } from '../../utils/app_routes';
+import { homeRoute, loginRoute, signUpRoute } from '../../utils/app_routes';
 
 const Navbar = () => {
 	const [workspaces, setWorkspaces] = useState<DropdownItem[]>([
@@ -43,7 +43,9 @@ const Navbar = () => {
 	return (
 		<nav className="navbar">
 			<div className='navbar__leftSec'>
-				<img src="https://trello.com/assets/87e1af770a49ce8e84e3.gif" alt="Trello Logo" />
+				<a href={homeRoute}>
+					<img src="https://trello.com/assets/87e1af770a49ce8e84e3.gif" alt="Trello Logo" />
+				</a>
 				{/* <NavbarDropdown
 					title="Workspaces"
 					items={workspaces}
@@ -54,9 +56,9 @@ const Navbar = () => {
 				/> */}
 			</div>
 			<div className='navbar__rightSec'>
-				<i className="fa-solid fa-circle-question"></i>
-				<i className="fa-solid fa-bell"></i>
-				<img src="https://trello-members.s3.amazonaws.com/61535414c479813fe5320674/b3edda9d79d04425f22f9d605e68e3c2/50.png" alt="User Avatar" />
+				{/* <i className="fa-solid fa-circle-question"></i>
+				<i className="fa-solid fa-bell"></i> */}
+				<img src="https://trello-logos.s3.amazonaws.com/c95e52bc93e8086fa1ab432d40ef5300/170.png" alt="User Avatar" />
 				<div className='navbar_btn'>
 					<a href={loginRoute}>
 						Sign In
@@ -68,7 +70,7 @@ const Navbar = () => {
 					</a>
 				</div>
 			</div>
-		</nav>
+		</nav >
 	)
 }
 

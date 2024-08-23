@@ -1,139 +1,21 @@
-import React, { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { closeModal } from '../../utils/utils';
+import { projectRepository } from '../../repositories/project';
+import { handleAPIError } from '../../repositories/utils';
+import { useNavigate } from 'react-router-dom';
+import { boardRepository } from '../../repositories/board';
+import { cardRepository } from '../../repositories/card';
 
-const WorkspaceBody = ({ showSidebar }: { showSidebar: boolean }) => {
-	const [project, setProject] = useState<any>({
-		id: 1,
-		name: 'Project 1',
-	});
+const WorkspaceBody = ({ showSidebar, selectedProjectId }: { showSidebar: boolean, selectedProjectId: string }) => {
+	const navigate = useNavigate();
 
-	const [cardLists, setCardLists] = useState<any[]>([
-		{
-			id: 1,
-			name: 'To Do',
-			cards: [
-				{
-					id: 1,
-					name: 'Card 1',
-				},
-				{
-					id: 2,
-					name: 'Card 2',
-				},
-				{
-					id: 3,
-					name: 'Card 3',
-				},
-				{
-					id: 4,
-					name: 'Card 4',
-				},
-				{
-					id: 5,
-					name: 'Card 5',
-				},
-				{
-					id: 6,
-					name: 'Card 6',
-				},
-				{
-					id: 7,
-					name: 'Card 7',
-				},
-				{
-					id: 8,
-					name: 'Card 8',
-				},
-				{
-					id: 9,
-					name: 'Card 9',
-				},
-				{
-					id: 10,
-					name: 'Card 10',
-				},
-				{
-					id: 11,
-					name: 'Card 11',
-				},
-			],
-		},
-		{
-			id: 2,
-			name: 'In Progress',
-			cards: [
-				{
-					id: 1,
-					name: 'Card 1',
-				},
-				{
-					id: 2,
-					name: 'Card 2',
-				},
-				{
-					id: 3,
-					name: 'Card 3',
-				},
-				{
-					id: 4,
-					name: 'Card 4',
-				},
-				{
-					id: 5,
-					name: 'Card 5',
-				},
-				{
-					id: 6,
-					name: 'Card 6',
-				},
-			],
-		},
-		{
-			id: 3,
-			name: 'Done',
-			cards: [
-				{
-					id: 1,
-					name: 'Card 1',
-				},
-				{
-					id: 2,
-					name: 'Card 2',
-				},
-				{
-					id: 3,
-					name: 'Card 3',
-				},
-			],
-		},
-		{
-			id: 4,
-			name: 'Blocked',
-		},
-		{
-			id: 5,
-			name: 'Archived',
-		},
-		// {
-		// 	id: 6,
-		// 	name: 'All',
-		// },
-		// {
-		// 	id: 7,
-		// 	name: 'Custom',
-		// },
-		// {
-		// 	id: 8,
-		// 	name: 'Custom',
-		// },
-		// {
-		// 	id: 9,
-		// 	name: 'Custom',
-		// }
-	]);
-
+	const [project, setProject] = useState<any>({});
+	const [updatedProject, setUpdatedProject] = useState<any>({});
 	const [projectNameClicked, setProjectNameClicked] = useState<boolean>(false);
 	const projectNameInputRef = useRef<HTMLInputElement>(null);
+
+	const [boards, setBoards] = useState<any[]>([]);
+	const [isLoading, setIsLoading] = useState(true);
 
 	const [selectedCardId, setSelectedCardId] = useState<any>(null);
 
@@ -141,7 +23,9 @@ const WorkspaceBody = ({ showSidebar }: { showSidebar: boolean }) => {
 
 	const handleClickOutside = (event: MouseEvent) => {
 		if (projectNameInputRef.current && !projectNameInputRef.current.contains(event.target as Node)) {
-			setProjectNameClicked(false);
+			// setProjectNameClicked(false);
+
+			updateProjectData();
 		}
 	};
 
@@ -152,6 +36,69 @@ const WorkspaceBody = ({ showSidebar }: { showSidebar: boolean }) => {
 		};
 	}, []);
 
+	useEffect(() => {
+		fetchProjectDetails();
+	}, [selectedProjectId]);
+
+	const fetchProjectDetails = async () => {
+		try {
+			const response = await projectRepository.getProject(selectedProjectId);
+			console.log("Project response", response);
+			const data = response.data;
+			console.log("Project data", data);
+			setProject(data);
+			setUpdatedProject({
+				id: data.id,
+				title: data.title,
+			});
+			console.log(updatedProject);
+			fetchBoards();
+		} catch (error: any) {
+			handleAPIError(error, navigate);
+			setIsLoading(false);
+		}
+	};
+
+	const fetchBoards = async () => {
+		const filters = {
+			project: selectedProjectId,
+			is_active: true,
+			is_deleted: false,
+		};
+		try {
+			const response = await boardRepository.getBoards(filters);
+			console.log(response);
+			const data = response.data.data;
+			setBoards(data);
+			setIsLoading(false);
+		} catch (error: any) {
+			handleAPIError(error, navigate);
+			setIsLoading(false);
+		}
+	};
+
+	const handleChangeProjectName = (e: any) => {
+		setUpdatedProject({
+			...updatedProject,
+			title: e.target.value,
+		});
+	};
+
+	const updateProjectData = async () => {
+		try {
+			console.log(project)
+			console.log(updatedProject)
+
+			const response = await projectRepository.updateProject(project.id, updatedProject);
+			console.log(response);
+			setIsLoading(false);
+		} catch (error: any) {
+			handleAPIError(error, navigate);
+			setIsLoading(false);
+		}
+		setProjectNameClicked(false);
+	};
+
 	return (
 		<>
 			<div className='workspaceBody'
@@ -161,11 +108,19 @@ const WorkspaceBody = ({ showSidebar }: { showSidebar: boolean }) => {
 					<div className='workspaceBody__header__left'>
 						<div className='headerItem'>
 							{
-								projectNameClicked ? (
-									<input type='text' placeholder='Project Name' ref={projectNameInputRef} />
+								!isLoading &&
+									projectNameClicked ? (
+									<input
+										type='text'
+										placeholder='Project Name'
+										ref={projectNameInputRef}
+										value={updatedProject.title}
+										onChange={(e) => handleChangeProjectName(e)}
+										onKeyDown={(e) => e.key === 'Enter' && updateProjectData()}
+									/>
 								) : (
 									<p onClick={() => setProjectNameClicked(!projectNameClicked)}>
-										{project.name}
+										{updatedProject.title}
 									</p>
 								)
 							}
@@ -179,15 +134,21 @@ const WorkspaceBody = ({ showSidebar }: { showSidebar: boolean }) => {
 				</div>
 				<div className='workspaceBody__content'>
 					{
-						cardLists && cardLists?.length > 0 && cardLists.map((cardList: any) => (
-							<CardList
-								key={cardList.id}
-								cardList={cardList}
+						!isLoading && boards && boards?.length > 0 && boards.map((board: any) => (
+							<Board
+								key={board.id}
+								board={board}
 								setSelectedCardId={setSelectedCardId}
 								setShowCardDetailsModal={setShowCardDetailsModal}
+								navigate={navigate}
 							/>
 						))
 					}
+					<button className='' type='button' style={{
+						width: '300px',
+					}}>
+						<i className="fa-solid fa-plus"></i> <span>Add Board</span>
+					</button>
 				</div>
 			</div>
 
@@ -195,7 +156,6 @@ const WorkspaceBody = ({ showSidebar }: { showSidebar: boolean }) => {
 				showCardDetailsModal && (
 					<CardDetailsModal
 						selectedCardId={selectedCardId}
-						showCardDetailsModal={showCardDetailsModal}
 						setShowCardDetailsModal={setShowCardDetailsModal}
 					/>
 				)
@@ -204,120 +164,17 @@ const WorkspaceBody = ({ showSidebar }: { showSidebar: boolean }) => {
 	)
 }
 
-const CardList = ({ cardList, setSelectedCardId, setShowCardDetailsModal }: { cardList: any, setSelectedCardId: any, setShowCardDetailsModal: any }) => {
-	const [cardNameClicked, setCardNameClicked] = useState<boolean>(false);
-	const cardNameInputRef = useRef<HTMLInputElement>(null);
+const Board = ({ board, setSelectedCardId, setShowCardDetailsModal, navigate }: { board: any, setSelectedCardId: any, setShowCardDetailsModal: any, navigate: any }) => {
+	const [boardData, setBoardData] = useState<any>(board);
+	const [cardList, setCardList] = useState<any[]>([]);
+	const [isLoading, setIsLoading] = useState(true);
 
-	// const [cards, setCards] = useState<any[]>([
-	// 	{
-	// 		id: 1,
-	// 		name: 'Card 1',
-	// 	},
-	// 	{
-	// 		id: 2,
-	// 		name: 'Card 2',
-	// 	},
-	// 	{
-	// 		id: 3,
-	// 		name: 'Card 3',
-	// 	},
-	// 	{
-	// 		id: 4,
-	// 		name: 'Card 4',
-	// 	},
-	// 	{
-	// 		id: 5,
-	// 		name: 'Card 5',
-	// 	},
-	// 	{
-	// 		id: 6,
-	// 		name: 'Card 6',
-	// 	},
-	// 	{
-	// 		id: 7,
-	// 		name: 'Card 7',
-	// 	},
-	// 	{
-	// 		id: 8,
-	// 		name: 'Card 8',
-	// 	},
-	// 	{
-	// 		id: 9,
-	// 		name: 'Card 9',
-	// 	},
-	// 	{
-	// 		id: 10,
-	// 		name: 'Card 10',
-	// 	},
-	// 	{
-	// 		id: 11,
-	// 		name: 'Card 11',
-	// 	},
-	// 	{
-	// 		id: 12,
-	// 		name: 'Card 12',
-	// 	},
-	// 	{
-	// 		id: 13,
-	// 		name: 'Card 13',
-	// 	},
-	// 	{
-	// 		id: 14,
-	// 		name: 'Card 14',
-	// 	},
-	// 	{
-	// 		id: 15,
-	// 		name: 'Card 15',
-	// 	},
-	// 	{
-	// 		id: 16,
-	// 		name: 'Card 16',
-	// 	},
-	// 	{
-	// 		id: 17,
-	// 		name: 'Card 17',
-	// 	},
-	// 	{
-	// 		id: 18,
-	// 		name: 'Card 18',
-	// 	},
-	// 	{
-	// 		id: 19,
-	// 		name: 'Card 19',
-	// 	},
-	// 	{
-	// 		id: 20,
-	// 		name: 'Card 20',
-	// 	},
-	// 	{
-	// 		id: 21,
-	// 		name: 'Card 21',
-	// 	},
-	// 	{
-	// 		id: 22,
-	// 		name: 'Card 22',
-	// 	},
-	// 	{
-	// 		id: 23,
-	// 		name: 'Card 23',
-	// 	},
-	// 	{
-	// 		id: 24,
-	// 		name: 'Card 24',
-	// 	},
-	// 	{
-	// 		id: 25,
-	// 		name: 'Card 25',
-	// 	},
-	// 	{
-	// 		id: 26,
-	// 		name: 'Card 26',
-	// 	},
-	// ]);
+	const [boardNameClicked, setBoardNameClicked] = useState<boolean>(false);
+	const boardNameInputRef = useRef<HTMLInputElement>(null);
 
 	const handleClickOutside = (event: MouseEvent) => {
-		if (cardNameInputRef.current && !cardNameInputRef.current.contains(event.target as Node)) {
-			setCardNameClicked(false);
+		if (boardNameInputRef.current && !boardNameInputRef.current.contains(event.target as Node)) {
+			setBoardNameClicked(false);
 		}
 	};
 
@@ -328,16 +185,71 @@ const CardList = ({ cardList, setSelectedCardId, setShowCardDetailsModal }: { ca
 		};
 	}, []);
 
+	useEffect(() => {
+		fetchCards();
+	}, [board]);
+
+	const fetchCards = async () => {
+		const filters = {
+			board: board.id,
+			is_active: true,
+			is_deleted: false,
+		};
+		try {
+			const response = await cardRepository.getCards(filters);
+			console.log(response);
+			const data = response.data.data;
+			setCardList(data);
+			setIsLoading(false);
+		} catch (error: any) {
+			handleAPIError(error, navigate);
+			setIsLoading(false);
+		}
+	};
+
+	const handleChangeBoardTitle = (e: any) => {
+		setBoardData({
+			...boardData,
+			title: e.target.value,
+		});
+	};
+
+	const updateBoardData = async () => {
+		console.log(boardData.title);
+		console.log(board.title);
+
+		const updateBoardData = {
+			title: boardData.title,
+			description: boardData.description,
+		}
+		try {
+			const response = await boardRepository.updateBoard(boardData.id, updateBoardData);
+			console.log(response);
+			setIsLoading(false);
+		} catch (error: any) {
+			handleAPIError(error, navigate);
+			setIsLoading(false);
+		}
+		setBoardNameClicked(false);
+	};
+
 	return (
-		<div className='cardList'>
-			<div className='cardList__header'>
+		<div className='board'>
+			<div className='board__header'>
 				<div>
 					{
-						cardNameClicked ? (
-							<input type='text' placeholder='Card Name' ref={cardNameInputRef} />
+						boardNameClicked ? (
+							<input
+								type='text'
+								placeholder='Board Name'
+								ref={boardNameInputRef}
+								value={boardData.title}
+								onChange={(e) => handleChangeBoardTitle(e)}
+								onKeyDown={(e) => e.key === 'Enter' && updateBoardData()}
+							/>
 						) : (
-							<p onClick={() => setCardNameClicked(!cardNameClicked)}>
-								{cardList.name}
+							<p onClick={() => setBoardNameClicked(!boardNameClicked)}>
+								{boardData.title.length > 20 ? boardData.title.slice(0, 20) + '...' : boardData.title}
 							</p>
 						)
 					}
@@ -346,9 +258,9 @@ const CardList = ({ cardList, setSelectedCardId, setShowCardDetailsModal }: { ca
 					<i className="fa-solid fa-ellipsis"></i>
 				</div>
 			</div>
-			<div className='cardList__content'>
+			<div className='board__content'>
 				{
-					cardList.cards && cardList.cards?.length > 0 && cardList.cards.map((card: any) => (
+					!isLoading && cardList?.length > 0 && cardList.map((card: any) => (
 						<Card
 							key={card.id}
 							card={card}
@@ -357,11 +269,9 @@ const CardList = ({ cardList, setSelectedCardId, setShowCardDetailsModal }: { ca
 						/>
 					))
 				}
-				<div className='card'>
-					<button className='addCardBtn' type='button'>
-						<i className="fa-solid fa-plus"></i> <span>Add Card</span>
-					</button>
-				</div>
+				<button className='w-100' type='button'>
+					<i className="fa-solid fa-plus"></i> <span>Add Card</span>
+				</button>
 			</div>
 		</div>
 	)
@@ -375,12 +285,12 @@ const Card = ({ card, setSelectedCardId, setShowCardDetailsModal }: { card: any,
 				setShowCardDetailsModal(true);
 			}}
 		>
-			<p>{card.name.length > 20 ? card.name.slice(0, 20) + '...' : card.name}</p>
+			<p>{card.title}</p>
 		</div>
 	)
 }
 
-const CardDetailsModal = ({ selectedCardId, showCardDetailsModal, setShowCardDetailsModal }: { selectedCardId: any, showCardDetailsModal: any, setShowCardDetailsModal: any }) => {
+const CardDetailsModal = ({ selectedCardId, setShowCardDetailsModal }: { selectedCardId: any, setShowCardDetailsModal: any }) => {
 	const [cardHeaderClicked, setCardHeaderClicked] = useState<boolean>(false);
 	const cardHeaderInputRef = useRef<HTMLInputElement>(null);
 	const [cardDescriptionClicked, setCardDescriptionClicked] = useState<boolean>(false);

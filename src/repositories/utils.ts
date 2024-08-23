@@ -1,6 +1,6 @@
 import { logout } from "../utils/utils";
 
-export const handleAPIError = (error, navigate) => {
+export const handleAPIError = (error: any, navigate: any) => {
 	console.error(error);
 	console.error(error?.response?.status);
 	// if (error?.response?.status === 404) {
