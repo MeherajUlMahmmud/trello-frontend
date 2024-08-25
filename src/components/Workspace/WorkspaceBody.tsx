@@ -1,12 +1,17 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+
 import { closeModal } from '../../utils/utils';
 import { projectRepository } from '../../repositories/project';
 import { handleAPIError } from '../../repositories/utils';
-import { useNavigate } from 'react-router-dom';
 import { boardRepository } from '../../repositories/board';
 import { cardRepository } from '../../repositories/card';
+import { ButtonType } from '../../types/Button';
 
-const WorkspaceBody = ({ showSidebar, selectedProjectId }: { showSidebar: boolean, selectedProjectId: string }) => {
+import Button from '../Common/Button';
+
+const WorkspaceBody = ({ showSidebar, selectedProjectId, accessToken }: { showSidebar: boolean, selectedProjectId: string, accessToken: string }) => {
 	const navigate = useNavigate();
 
 	const [project, setProject] = useState<any>({});
@@ -42,7 +47,7 @@ const WorkspaceBody = ({ showSidebar, selectedProjectId }: { showSidebar: boolea
 
 	const fetchProjectDetails = async () => {
 		try {
-			const response = await projectRepository.getProject(selectedProjectId);
+			const response = await projectRepository.getProject(selectedProjectId, accessToken);
 			console.log("Project response", response);
 			const data = response.data;
 			console.log("Project data", data);
@@ -66,7 +71,7 @@ const WorkspaceBody = ({ showSidebar, selectedProjectId }: { showSidebar: boolea
 			is_deleted: false,
 		};
 		try {
-			const response = await boardRepository.getBoards(filters);
+			const response = await boardRepository.getBoards(filters, accessToken);
 			console.log(response);
 			const data = response.data.data;
 			setBoards(data);
@@ -89,7 +94,7 @@ const WorkspaceBody = ({ showSidebar, selectedProjectId }: { showSidebar: boolea
 			console.log(project)
 			console.log(updatedProject)
 
-			const response = await projectRepository.updateProject(project.id, updatedProject);
+			const response = await projectRepository.updateProject(project.id, updatedProject, accessToken);
 			console.log(response);
 			setIsLoading(false);
 		} catch (error: any) {
@@ -97,6 +102,50 @@ const WorkspaceBody = ({ showSidebar, selectedProjectId }: { showSidebar: boolea
 			setIsLoading(false);
 		}
 		setProjectNameClicked(false);
+	};
+
+	const rearrangeArr = (arr: any[], sourceIndex: number, destIndex: number) => {
+		const arrCopy = [...arr];
+		const [removed] = arrCopy.splice(sourceIndex, 1);
+		arrCopy.splice(destIndex, 0, removed);
+
+		return arrCopy;
+	};
+
+	// Handle drag end for both boards and cards
+	const handleDragEnd = (result: any) => {
+		const { destination, source, draggableId, type } = result;
+
+		if (!destination) return;
+
+		if (type === 'board') {
+			// Reorder boards
+			const reorderedBoards = Array.from(boards);
+			setBoards(rearrangeArr(reorderedBoards, source.index, destination.index));
+		} else {
+			// Reorder cards within or between boards
+			const startBoard = boards.find(board => board.id === source.droppableId);
+			const endBoard = boards.find(board => board.id === destination.droppableId);
+
+			if (startBoard === endBoard) {
+				// Reorder cards within the same board
+				const reorderedCards = Array.from(startBoard.cards);
+				const [removed] = reorderedCards.splice(source.index, 1);
+				reorderedCards.splice(destination.index, 0, removed);
+				startBoard.cards = reorderedCards;
+			} else {
+				// Move card between boards
+				const startCards = Array.from(startBoard.cards);
+				const [removed] = startCards.splice(source.index, 1);
+				const endCards = Array.from(endBoard.cards);
+				endCards.splice(destination.index, 0, removed);
+
+				startBoard.cards = startCards;
+				endBoard.cards = endCards;
+			}
+
+			setBoards([...boards]);
+		}
 	};
 
 	return (
@@ -132,24 +181,52 @@ const WorkspaceBody = ({ showSidebar, selectedProjectId }: { showSidebar: boolea
 						</div>
 					</div>
 				</div>
-				<div className='workspaceBody__content'>
-					{
-						!isLoading && boards && boards?.length > 0 && boards.map((board: any) => (
-							<Board
-								key={board.id}
-								board={board}
-								setSelectedCardId={setSelectedCardId}
-								setShowCardDetailsModal={setShowCardDetailsModal}
-								navigate={navigate}
-							/>
-						))
-					}
-					<button className='' type='button' style={{
-						width: '300px',
-					}}>
-						<i className="fa-solid fa-plus"></i> <span>Add Board</span>
-					</button>
-				</div>
+
+				<DragDropContext onDragEnd={handleDragEnd}>
+					<Droppable droppableId="all-boards" direction="horizontal" type="board">
+						{(provided: any) => (
+							<div
+								className='workspaceBody__content'
+								ref={provided.innerRef}
+								{...provided.droppableProps}
+							>
+								{!isLoading && boards.map((board: any, index: number) => (
+									<Draggable draggableId={board.id} index={index} key={board.id}>
+										{(provided: any) => (
+											<div
+												ref={provided.innerRef}
+												{...provided.draggableProps}
+												{...provided.dragHandleProps}
+											>
+												<Board
+													key={board.id}
+													board={board}
+													setSelectedCardId={setSelectedCardId}
+													setShowCardDetailsModal={setShowCardDetailsModal}
+													accessToken={accessToken}
+													navigate={navigate}
+												/>
+											</div>
+										)}
+									</Draggable>
+								))}
+								{provided.placeholder}
+								<Button
+									icon='fa-solid fa-plus'
+									text='Add Board'
+									type={ButtonType.Button}
+									className=''
+									// onClick={() => setShowCardDetailsModal(true)}
+									style={{
+										backgroundColor: '#333c44',
+										minWidth: '300px',
+										height: '55px',
+									}}
+								/>
+							</div>
+						)}
+					</Droppable>
+				</DragDropContext>
 			</div>
 
 			{
@@ -161,10 +238,10 @@ const WorkspaceBody = ({ showSidebar, selectedProjectId }: { showSidebar: boolea
 				)
 			}
 		</>
-	)
-}
+	);
+};
 
-const Board = ({ board, setSelectedCardId, setShowCardDetailsModal, navigate }: { board: any, setSelectedCardId: any, setShowCardDetailsModal: any, navigate: any }) => {
+const Board = ({ board, setSelectedCardId, setShowCardDetailsModal, accessToken, navigate }: { board: any, setSelectedCardId: any, setShowCardDetailsModal: any, accessToken: string, navigate: any }) => {
 	const [boardData, setBoardData] = useState<any>(board);
 	const [cardList, setCardList] = useState<any[]>([]);
 	const [isLoading, setIsLoading] = useState(true);
@@ -223,7 +300,7 @@ const Board = ({ board, setSelectedCardId, setShowCardDetailsModal, navigate }: 
 			description: boardData.description,
 		}
 		try {
-			const response = await boardRepository.updateBoard(boardData.id, updateBoardData);
+			const response = await boardRepository.updateBoard(boardData.id, updateBoardData, accessToken);
 			console.log(response);
 			setIsLoading(false);
 		} catch (error: any) {
@@ -234,61 +311,81 @@ const Board = ({ board, setSelectedCardId, setShowCardDetailsModal, navigate }: 
 	};
 
 	return (
-		<div className='board'>
-			<div className='board__header'>
-				<div>
-					{
-						boardNameClicked ? (
-							<input
-								type='text'
-								placeholder='Board Name'
-								ref={boardNameInputRef}
-								value={boardData.title}
-								onChange={(e) => handleChangeBoardTitle(e)}
-								onKeyDown={(e) => e.key === 'Enter' && updateBoardData()}
-							/>
-						) : (
-							<p onClick={() => setBoardNameClicked(!boardNameClicked)}>
-								{boardData.title.length > 20 ? boardData.title.slice(0, 20) + '...' : boardData.title}
-							</p>
-						)
-					}
-				</div>
-				<div>
-					<i className="fa-solid fa-ellipsis"></i>
-				</div>
-			</div>
-			<div className='board__content'>
-				{
-					!isLoading && cardList?.length > 0 && cardList.map((card: any) => (
-						<Card
-							key={card.id}
-							card={card}
-							setSelectedCardId={setSelectedCardId}
-							setShowCardDetailsModal={setShowCardDetailsModal}
+		<Droppable droppableId={board.id} type="card">
+			{(provided: any) => (
+				<div className='board' ref={provided.innerRef} {...provided.droppableProps}>
+					<div className='board__header'>
+						<div>
+							{
+								boardNameClicked ? (
+									<input
+										type='text'
+										placeholder='Board Name'
+										ref={boardNameInputRef}
+										value={boardData.title}
+										onChange={(e) => handleChangeBoardTitle(e)}
+										onKeyDown={(e) => e.key === 'Enter' && updateBoardData()}
+									/>
+								) : (
+									<p onClick={() => setBoardNameClicked(!boardNameClicked)}>
+										{boardData.title.length > 20 ? boardData.title.slice(0, 20) + '...' : boardData.title}
+									</p>
+								)
+							}
+						</div>
+						<div>
+							<i className="fa-solid fa-ellipsis"></i>
+						</div>
+					</div>
+					<div className='board__content'>
+						{!isLoading && cardList?.length > 0 && cardList.map((card: any, index: number) => (
+							<Draggable draggableId={card.id} index={index} key={card.id}>
+								{(provided: any) => (
+									<div
+										ref={provided.innerRef}
+										{...provided.draggableProps}
+										{...provided.dragHandleProps}
+									>
+										<Card
+											key={card.id}
+											card={card}
+											setSelectedCardId={setSelectedCardId}
+											setShowCardDetailsModal={setShowCardDetailsModal}
+										/>
+									</div>
+								)}
+							</Draggable>
+						))}
+						{provided.placeholder}
+						<Button
+							icon='fa-solid fa-plus'
+							text='Add Card'
+							type={ButtonType.Button}
+							className='w-100'
+							// onClick={() => setShowCardDetailsModal(true)}
+							style={{
+								backgroundColor: '#333c44',
+							}}
 						/>
-					))
-				}
-				<button className='w-100' type='button'>
-					<i className="fa-solid fa-plus"></i> <span>Add Card</span>
-				</button>
-			</div>
-		</div>
-	)
-}
+					</div>
+				</div>
+			)}
+		</Droppable>
+	);
+};
 
 const Card = ({ card, setSelectedCardId, setShowCardDetailsModal }: { card: any, setSelectedCardId: any, setShowCardDetailsModal: any }) => {
 	return (
 		<div className='card'
-			onClick={() => {
-				setSelectedCardId(card.id);
-				setShowCardDetailsModal(true);
-			}}
+		// onClick={() => {
+		// 	setSelectedCardId(card.id);
+		// 	setShowCardDetailsModal(true);
+		// }}
 		>
 			<p>{card.title}</p>
 		</div>
 	)
-}
+};
 
 const CardDetailsModal = ({ selectedCardId, setShowCardDetailsModal }: { selectedCardId: any, setShowCardDetailsModal: any }) => {
 	const [cardHeaderClicked, setCardHeaderClicked] = useState<boolean>(false);
@@ -432,6 +529,6 @@ const CardDetailsModal = ({ selectedCardId, setShowCardDetailsModal }: { selecte
 			</div>
 		</div>
 	)
-}
+};
 
 export default WorkspaceBody;

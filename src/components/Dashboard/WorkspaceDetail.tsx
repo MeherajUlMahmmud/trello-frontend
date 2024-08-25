@@ -4,8 +4,10 @@ import { workspaceRepository } from '../../repositories/workspace';
 import { handleAPIError } from '../../repositories/utils';
 import { useNavigate } from 'react-router-dom';
 import { projectRepository } from '../../repositories/project';
+import Button from '../Common/Button';
+import { ButtonType } from '../../types/Button';
 
-const WorkspaceDetail = ({ selectedWorkspaceId, setShowCreateProjectModal, setShowUpdateWorkspaceModal }: { selectedWorkspaceId: string, setShowCreateProjectModal: React.Dispatch<React.SetStateAction<boolean>>, setShowUpdateWorkspaceModal: React.Dispatch<React.SetStateAction<boolean>> }) => {
+const WorkspaceDetail = ({ selectedWorkspaceId, setShowCreateProjectModal, setShowUpdateWorkspaceModal, accessToken }: { selectedWorkspaceId: string, setShowCreateProjectModal: React.Dispatch<React.SetStateAction<boolean>>, setShowUpdateWorkspaceModal: React.Dispatch<React.SetStateAction<boolean>>, accessToken: string }) => {
 	const navigate = useNavigate();
 
 	const projectFilters = {
@@ -24,7 +26,7 @@ const WorkspaceDetail = ({ selectedWorkspaceId, setShowCreateProjectModal, setSh
 
 	const fetchWorkspaceDetails = async () => {
 		try {
-			const response = await workspaceRepository.getWorkspace(selectedWorkspaceId);
+			const response = await workspaceRepository.getWorkspace(selectedWorkspaceId, accessToken);
 			console.log(response);
 			setCurrentWorkSpace(response.data.data);
 
@@ -37,7 +39,7 @@ const WorkspaceDetail = ({ selectedWorkspaceId, setShowCreateProjectModal, setSh
 
 	const fetchProjects = async () => {
 		try {
-			const response = await projectRepository.getProjects(projectFilters);
+			const response = await projectRepository.getProjects(projectFilters, accessToken);
 			console.log(response);
 			const data = response.data.data;
 			setProjects(data);
@@ -83,12 +85,16 @@ const WorkspaceDetail = ({ selectedWorkspaceId, setShowCreateProjectModal, setSh
 								<i className="fa-solid fa-tasks"></i>
 								<h1>Your Projects</h1>
 							</div>
-							<button type='button' className='row btn'
+							<Button
+								icon='fa-solid fa-plus'
+								text='Create Project'
+								type={ButtonType.Button}
+								className=''
 								onClick={() => setShowCreateProjectModal(true)}
-							>
-								<i className="fa-solid fa-plus"></i>
-								<p>Create Project</p>
-							</button>
+								style={{
+									backgroundColor: '#333c44',
+								}}
+							/>
 						</div>
 					</div>
 					<div className='bottom_section__content'>

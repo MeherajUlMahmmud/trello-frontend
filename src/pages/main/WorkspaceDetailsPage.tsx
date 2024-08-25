@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+import { loadLocalStorage } from '../../utils/persistLocalStorage';
 import { projectRepository } from '../../repositories/project';
 import { workspaceRepository } from '../../repositories/workspace';
 import { handleAPIError } from '../../repositories/utils';
@@ -10,10 +11,12 @@ import '../../styles/workspace.scss';
 import WorkspaceSidebar from '../../components/Workspace/WorkspaceSidebar';
 import WorkspaceMiniSidebar from '../../components/Workspace/WorkspaceMiniSidebar';
 import WorkspaceBody from '../../components/Workspace/WorkspaceBody';
-import { closeModal } from '../../utils/utils';
+import CreateProjectModal from '../../components/Project/CreateProjectModal';
 
 const WorkspaceDetailsPage = () => {
 	const navigate = useNavigate();
+
+	const tokens = loadLocalStorage('tokens');
 
 	const selectedWorkspaceId = window.location.pathname.split('/')[2];
 	const selectedProjectId = window.location.pathname.split('/')[3];
@@ -37,7 +40,7 @@ const WorkspaceDetailsPage = () => {
 
 	const fetchWorkspaceDetails = async () => {
 		try {
-			const response = await workspaceRepository.getWorkspace(selectedWorkspaceId);
+			const response = await workspaceRepository.getWorkspace(selectedWorkspaceId, tokens.access);
 			console.log(response);
 			setWorkspace(response.data.data);
 
@@ -50,8 +53,8 @@ const WorkspaceDetailsPage = () => {
 
 	const fetchProjects = async () => {
 		try {
-			const response = await projectRepository.getProjects(projectFilters);
-			console.log(response);
+			const response = await projectRepository.getProjects(projectFilters, tokens.access);
+			console.log(response, "response");
 			const data = response.data.data;
 			setProjects(data);
 
@@ -99,6 +102,7 @@ const WorkspaceDetailsPage = () => {
 						<WorkspaceBody
 							showSidebar={showSidebar}
 							selectedProjectId={selectedProjectId}
+							accessToken={tokens.access}
 						/>
 					</>
 				)
@@ -108,49 +112,10 @@ const WorkspaceDetailsPage = () => {
 				showCreateProjectModal &&
 				<CreateProjectModal
 					setShowCreateProjectModal={setShowCreateProjectModal}
+					selectedWorkspaceId={selectedWorkspaceId}
+					accessToken={tokens.access}
 				/>
 			}
-		</div>
-	)
-}
-
-const CreateProjectModal = ({ setShowCreateProjectModal }: { setShowCreateProjectModal: React.Dispatch<React.SetStateAction<boolean>> }) => {
-	const [projectInfo, setProjectInfo] = useState({
-		projectName: '',
-		projectDescription: '',
-	});
-
-	const handleChange = (e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLTextAreaElement>) => {
-		setProjectInfo({
-			...projectInfo,
-			[e.target.name]: e.target.value,
-		});
-	};
-
-	return (
-		<div className='modal__wrapper' onClick={(e) => closeModal(e, setShowCreateProjectModal)}>
-			<div className='modal'>
-				<div className='closeModal' onClick={() => setShowCreateProjectModal(false)}>
-					<i className="fa-solid fa-xmark"></i>
-				</div>
-				<div className='modal__header'>
-					<h1>Create Project</h1>
-				</div>
-				<div className='modal__body'>
-					<div className='modal__body__form'>
-						<input type='text' placeholder='Project Name'
-							name='projectName'
-							value={projectInfo.projectName}
-							onChange={(e) => handleChange(e)}
-						/>
-						<textarea placeholder='Project Description'
-							name='projectDescription'
-							value={projectInfo.projectDescription}
-							onChange={(e) => handleChange(e)}
-						/>
-					</div>
-				</div>
-			</div>
 		</div>
 	)
 }

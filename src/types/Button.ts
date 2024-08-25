@@ -5,9 +5,11 @@ export enum ButtonType {
 }
 
 export interface ButtonProps {
-	text: string;
+	icon?: string;
+	text?: string;
 	type: ButtonType;
 	className: string;
 	isDisabled?: boolean;
 	onClick?: () => void;
+	style?: React.CSSProperties;
 }

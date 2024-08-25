@@ -1,27 +1,24 @@
-import { loadLocalStorage } from "../utils/persistLocalStorage";
 import { BOARD_URL } from "../utils/urls";
 import { sendGetRequest, sendPatchRequest } from "./apiHandler";
 
-const tokens = loadLocalStorage("tokens");
-
 export const boardRepository = {
-	getBoards: async (filters: any) => {
+	getBoards: async (filters: any, accessToken: string) => {
 		const paramStr = new URLSearchParams(filters).toString();
 		const res = await sendGetRequest(
 			BOARD_URL + "list/?" + paramStr,
-			tokens.access
+			accessToken
 		);
 		return res;
 	},
-	getBoard: async (id: string) => {
-		const res = await sendGetRequest(BOARD_URL + `${id}/`, tokens.access);
+	getBoard: async (id: string, accessToken: string) => {
+		const res = await sendGetRequest(BOARD_URL + `${id}/`, accessToken);
 		return res;
 	},
-	updateBoard: async (id: string, data: any) => {
+	updateBoard: async (id: string, data: any, accessToken: string) => {
 		const res = await sendPatchRequest(
 			BOARD_URL + `${id}/update/`,
 			data,
-			tokens.access
+			accessToken
 		);
 		return res;
 	},

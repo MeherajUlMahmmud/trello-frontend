@@ -10,6 +10,7 @@ import '../../styles/dashboard.scss';
 
 import WorkspaceDetail from '../../components/Dashboard/WorkspaceDetail';
 import DashboardSidebar from '../../components/Dashboard/DashboardSidebar';
+import CreateProjectModal from '../../components/Project/CreateProjectModal';
 
 const DashboardPage = () => {
   const navigate = useNavigate();
@@ -42,7 +43,7 @@ const DashboardPage = () => {
 
   const fetchWorkspaces = async () => {
     try {
-      const response = await workspaceRepository.getWorkspaces(workspaceFilters);
+      const response = await workspaceRepository.getWorkspaces(workspaceFilters, tokens.access);
       console.log(response);
       const data = response.data.data;
 
@@ -66,7 +67,7 @@ const DashboardPage = () => {
           isLoading ? (
             <i className="fa fa-spinner fa-spin"></i>
           ) : (
-            workspaceList.length > 0 ? (
+            workspaceList && workspaceList.length > 0 ? (
               <>
                 <DashboardSidebar
                   workspaceList={workspaceList}
@@ -77,6 +78,7 @@ const DashboardPage = () => {
                   selectedWorkspaceId={selectedWorkspaceId}
                   setShowCreateProjectModal={setShowCreateProjectModal}
                   setShowUpdateWorkspaceModal={setShowUpdateWorkspaceModal}
+                  accessToken={tokens.access}
                 />
               </>
             ) : (
@@ -91,12 +93,15 @@ const DashboardPage = () => {
         showCreateProjectModal &&
         <CreateProjectModal
           setShowCreateProjectModal={setShowCreateProjectModal}
+          selectedWorkspaceId={selectedWorkspaceId}
+          accessToken={tokens.access}
         />
       }
 
       {
         showUpdateWorkspaceModal &&
         <UpdateWorkspaceModal
+          workspace={workspaceList.find((item: any) => item.id === selectedWorkspaceId)}
           setShowUpdateWorkspaceModal={setShowUpdateWorkspaceModal}
         />
       }
@@ -104,51 +109,11 @@ const DashboardPage = () => {
   )
 }
 
-const CreateProjectModal = ({ setShowCreateProjectModal }: { setShowCreateProjectModal: React.Dispatch<React.SetStateAction<boolean>> }) => {
-  const [projectInfo, setProjectInfo] = useState({
-    projectName: '',
-    projectDescription: '',
-  });
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLTextAreaElement>) => {
-    setProjectInfo({
-      ...projectInfo,
-      [e.target.name]: e.target.value,
-    });
-  };
-
-  return (
-    <div className='modal__wrapper' onClick={(e) => closeModal(e, setShowCreateProjectModal)}>
-      <div className='modal'>
-        <div className='closeModal' onClick={() => setShowCreateProjectModal(false)}>
-          <i className="fa-solid fa-xmark"></i>
-        </div>
-        <div className='modal__header'>
-          <h1>Create Project</h1>
-        </div>
-        <div className='modal__body'>
-          <div className='modal__body__form'>
-            <input type='text' placeholder='Project Name'
-              name='projectName'
-              value={projectInfo.projectName}
-              onChange={(e) => handleChange(e)}
-            />
-            <textarea placeholder='Project Description'
-              name='projectDescription'
-              value={projectInfo.projectDescription}
-              onChange={(e) => handleChange(e)}
-            />
-          </div>
-        </div>
-      </div>
-    </div>
-  )
-}
-
-const UpdateWorkspaceModal = ({ setShowUpdateWorkspaceModal }: { setShowUpdateWorkspaceModal: React.Dispatch<React.SetStateAction<boolean>> }) => {
+const UpdateWorkspaceModal = ({
+  workspace, setShowUpdateWorkspaceModal }: { workspace: any, setShowUpdateWorkspaceModal: React.Dispatch<React.SetStateAction<boolean>> }) => {
   const [workspaceInfo, setWorkspaceInfo] = useState({
-    workspaceName: '',
-    workspaceDescription: '',
+    workspaceName: workspace.title,
+    workspaceDescription: workspace.description,
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -169,16 +134,27 @@ const UpdateWorkspaceModal = ({ setShowUpdateWorkspaceModal }: { setShowUpdateWo
         </div>
         <div className='modal__body'>
           <div className='modal__body__form'>
-            <input type='text' placeholder='Workspace Name'
-              name='workspaceName'
-              value={workspaceInfo.workspaceName}
-              onChange={(e) => handleChange(e)}
-            />
-            <textarea placeholder='Workspace Description'
-              name='workspaceDescription'
-              value={workspaceInfo.workspaceDescription}
-              onChange={(e) => handleChange(e)}
-            />
+            <div className='form__group'>
+              <label htmlFor='workspaceName'>Workspace Name</label>
+              <input type='text' placeholder='Workspace Name'
+                name='workspaceName'
+                value={workspaceInfo.workspaceName}
+                onChange={(e) => handleChange(e)}
+              />
+            </div>
+            <div className='form__group'>
+              <label htmlFor='workspaceDescription'>Workspace Description</label>
+              <textarea placeholder='Workspace Description'
+                name='workspaceDescription'
+                value={workspaceInfo.workspaceDescription}
+                onChange={(e) => handleChange(e)}
+              />
+            </div>
+            <div className='form__actions'>
+              <button type='submit' className='btn w-100'>
+                Update
+              </button>
+            </div>
           </div>
         </div>
       </div>

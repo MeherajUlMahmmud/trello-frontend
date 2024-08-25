@@ -190,7 +190,7 @@
 			.board {
 				display: flex;
 				flex-direction: column;
-				width: 300px;
+				min-width: 300px;
 				height: fit-content;
 				background-color: #101204;
 				border-radius: 10px;

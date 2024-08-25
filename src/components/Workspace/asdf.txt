@@ -1,0 +1,298 @@
+
+// const WorkspaceBody = ({ showSidebar, selectedProjectId, accessToken }: { showSidebar: boolean, selectedProjectId: string, accessToken: string }) => {
+// 	const navigate = useNavigate();
+
+// 	const [project, setProject] = useState<any>({});
+// 	const [updatedProject, setUpdatedProject] = useState<any>({});
+// 	const [projectNameClicked, setProjectNameClicked] = useState<boolean>(false);
+// 	const projectNameInputRef = useRef<HTMLInputElement>(null);
+
+// 	const [boards, setBoards] = useState<any[]>([]);
+// 	const [isLoading, setIsLoading] = useState(true);
+
+// 	const [selectedCardId, setSelectedCardId] = useState<any>(null);
+
+// 	const [showCardDetailsModal, setShowCardDetailsModal] = useState<boolean>(false);
+
+// 	const handleClickOutside = (event: MouseEvent) => {
+// 		if (projectNameInputRef.current && !projectNameInputRef.current.contains(event.target as Node)) {
+// 			// setProjectNameClicked(false);
+
+// 			updateProjectData();
+// 		}
+// 	};
+
+// 	useEffect(() => {
+// 		document.addEventListener('mousedown', handleClickOutside);
+// 		return () => {
+// 			document.removeEventListener('mousedown', handleClickOutside);
+// 		};
+// 	}, []);
+
+// 	useEffect(() => {
+// 		fetchProjectDetails();
+// 	}, [selectedProjectId]);
+
+// 	const fetchProjectDetails = async () => {
+// 		try {
+// 			const response = await projectRepository.getProject(selectedProjectId, accessToken);
+// 			console.log("Project response", response);
+// 			const data = response.data;
+// 			console.log("Project data", data);
+// 			setProject(data);
+// 			setUpdatedProject({
+// 				id: data.id,
+// 				title: data.title,
+// 			});
+// 			console.log(updatedProject);
+// 			fetchBoards();
+// 		} catch (error: any) {
+// 			handleAPIError(error, navigate);
+// 			setIsLoading(false);
+// 		}
+// 	};
+
+// 	const fetchBoards = async () => {
+// 		const filters = {
+// 			project: selectedProjectId,
+// 			is_active: true,
+// 			is_deleted: false,
+// 		};
+// 		try {
+// 			const response = await boardRepository.getBoards(filters, accessToken);
+// 			console.log(response);
+// 			const data = response.data.data;
+// 			setBoards(data);
+// 			setIsLoading(false);
+// 		} catch (error: any) {
+// 			handleAPIError(error, navigate);
+// 			setIsLoading(false);
+// 		}
+// 	};
+
+// 	const handleChangeProjectName = (e: any) => {
+// 		setUpdatedProject({
+// 			...updatedProject,
+// 			title: e.target.value,
+// 		});
+// 	};
+
+// 	const updateProjectData = async () => {
+// 		try {
+// 			console.log(project)
+// 			console.log(updatedProject)
+
+// 			const response = await projectRepository.updateProject(project.id, updatedProject, accessToken);
+// 			console.log(response);
+// 			setIsLoading(false);
+// 		} catch (error: any) {
+// 			handleAPIError(error, navigate);
+// 			setIsLoading(false);
+// 		}
+// 		setProjectNameClicked(false);
+// 	};
+
+// 	return (
+// 		<>
+// 			<div className='workspaceBody'
+// 				style={{ width: showSidebar ? 'calc(100% - 300px)' : 'calc(100% - 20px)' }}
+// 			>
+// 				<div className='workspaceBody__header'>
+// 					<div className='workspaceBody__header__left'>
+// 						<div className='headerItem'>
+// 							{
+// 								!isLoading &&
+// 									projectNameClicked ? (
+// 									<input
+// 										type='text'
+// 										placeholder='Project Name'
+// 										ref={projectNameInputRef}
+// 										value={updatedProject.title}
+// 										onChange={(e) => handleChangeProjectName(e)}
+// 										onKeyDown={(e) => e.key === 'Enter' && updateProjectData()}
+// 									/>
+// 								) : (
+// 									<p onClick={() => setProjectNameClicked(!projectNameClicked)}>
+// 										{updatedProject.title}
+// 									</p>
+// 								)
+// 							}
+// 						</div>
+// 					</div>
+// 					<div className='workspaceBody__header__right'>
+// 						<div className='headerItem'>
+// 							<i className="fa-solid fa-ellipsis"></i>
+// 						</div>
+// 					</div>
+// 				</div>
+// 				<div className='workspaceBody__content'>
+// 					{
+// 						!isLoading && boards && boards?.length > 0 && boards.map((board: any) => (
+// 							<Board
+// 								key={board.id}
+// 								board={board}
+// 								setSelectedCardId={setSelectedCardId}
+// 								setShowCardDetailsModal={setShowCardDetailsModal}
+// 								accessToken={accessToken}
+// 								navigate={navigate}
+// 							/>
+// 						))
+// 					}
+// 					<Button
+// 						icon='fa-solid fa-plus'
+// 						text='Add Board'
+// 						type={ButtonType.Button}
+// 						className=''
+// 						// onClick={() => setShowCardDetailsModal(true)}
+// 						style={{
+// 							backgroundColor: '#333c44',
+// 							minWidth: '300px',
+// 						}}
+// 					/>
+// 				</div>
+// 			</div>
+
+// 			{
+// 				showCardDetailsModal && (
+// 					<CardDetailsModal
+// 						selectedCardId={selectedCardId}
+// 						setShowCardDetailsModal={setShowCardDetailsModal}
+// 					/>
+// 				)
+// 			}
+// 		</>
+// 	)
+// }
+
+// const Board = ({ board, setSelectedCardId, setShowCardDetailsModal, accessToken, navigate }: { board: any, setSelectedCardId: any, setShowCardDetailsModal: any, accessToken: string, navigate: any }) => {
+// 	const [boardData, setBoardData] = useState<any>(board);
+// 	const [cardList, setCardList] = useState<any[]>([]);
+// 	const [isLoading, setIsLoading] = useState(true);
+
+// 	const [boardNameClicked, setBoardNameClicked] = useState<boolean>(false);
+// 	const boardNameInputRef = useRef<HTMLInputElement>(null);
+
+// 	const handleClickOutside = (event: MouseEvent) => {
+// 		if (boardNameInputRef.current && !boardNameInputRef.current.contains(event.target as Node)) {
+// 			setBoardNameClicked(false);
+// 		}
+// 	};
+
+// 	useEffect(() => {
+// 		document.addEventListener('mousedown', handleClickOutside);
+// 		return () => {
+// 			document.removeEventListener('mousedown', handleClickOutside);
+// 		};
+// 	}, []);
+
+// 	useEffect(() => {
+// 		fetchCards();
+// 	}, [board]);
+
+// 	const fetchCards = async () => {
+// 		const filters = {
+// 			board: board.id,
+// 			is_active: true,
+// 			is_deleted: false,
+// 		};
+// 		try {
+// 			const response = await cardRepository.getCards(filters);
+// 			console.log(response);
+// 			const data = response.data.data;
+// 			setCardList(data);
+// 			setIsLoading(false);
+// 		} catch (error: any) {
+// 			handleAPIError(error, navigate);
+// 			setIsLoading(false);
+// 		}
+// 	};
+
+// 	const handleChangeBoardTitle = (e: any) => {
+// 		setBoardData({
+// 			...boardData,
+// 			title: e.target.value,
+// 		});
+// 	};
+
+// 	const updateBoardData = async () => {
+// 		console.log(boardData.title);
+// 		console.log(board.title);
+
+// 		const updateBoardData = {
+// 			title: boardData.title,
+// 			description: boardData.description,
+// 		}
+// 		try {
+// 			const response = await boardRepository.updateBoard(boardData.id, updateBoardData, accessToken);
+// 			console.log(response);
+// 			setIsLoading(false);
+// 		} catch (error: any) {
+// 			handleAPIError(error, navigate);
+// 			setIsLoading(false);
+// 		}
+// 		setBoardNameClicked(false);
+// 	};
+
+// 	return (
+// 		<div className='board'>
+// 			<div className='board__header'>
+// 				<div>
+// 					{
+// 						boardNameClicked ? (
+// 							<input
+// 								type='text'
+// 								placeholder='Board Name'
+// 								ref={boardNameInputRef}
+// 								value={boardData.title}
+// 								onChange={(e) => handleChangeBoardTitle(e)}
+// 								onKeyDown={(e) => e.key === 'Enter' && updateBoardData()}
+// 							/>
+// 						) : (
+// 							<p onClick={() => setBoardNameClicked(!boardNameClicked)}>
+// 								{boardData.title.length > 20 ? boardData.title.slice(0, 20) + '...' : boardData.title}
+// 							</p>
+// 						)
+// 					}
+// 				</div>
+// 				<div>
+// 					<i className="fa-solid fa-ellipsis"></i>
+// 				</div>
+// 			</div>
+// 			<div className='board__content'>
+// 				{
+// 					!isLoading && cardList?.length > 0 && cardList.map((card: any) => (
+// 						<Card
+// 							key={card.id}
+// 							card={card}
+// 							setSelectedCardId={setSelectedCardId}
+// 							setShowCardDetailsModal={setShowCardDetailsModal}
+// 						/>
+// 					))
+// 				}
+// 				<Button
+// 					icon='fa-solid fa-plus'
+// 					text='Add Card'
+// 					type={ButtonType.Button}
+// 					className='w-100'
+// 					// onClick={() => setShowCardDetailsModal(true)}
+// 					style={{
+// 						backgroundColor: '#333c44',
+// 					}}
+// 				/>
+// 			</div>
+// 		</div>
+// 	)
+// }
+
+// const Card = ({ card, setSelectedCardId, setShowCardDetailsModal }: { card: any, setSelectedCardId: any, setShowCardDetailsModal: any }) => {
+// 	return (
+// 		<div className='card'
+// 			onClick={() => {
+// 				setSelectedCardId(card.id);
+// 				setShowCardDetailsModal(true);
+// 			}}
+// 		>
+// 			<p>{card.title}</p>
+// 		</div>
+// 	)
+// }
