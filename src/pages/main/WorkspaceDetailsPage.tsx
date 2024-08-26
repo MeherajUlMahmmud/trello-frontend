@@ -34,14 +34,23 @@ const WorkspaceDetailsPage = () => {
 
 	const [showCreateProjectModal, setShowCreateProjectModal] = useState(false);
 
+	const [refetchProject, setRefetchProject] = useState(false);
+
 	useEffect(() => {
 		fetchWorkspaceDetails();
 	}, [selectedWorkspaceId]);
 
+	useEffect(() => {
+		if (refetchProject) {
+			fetchProjects();
+			setRefetchProject(false);
+		}
+	}, [refetchProject]);
+
 	const fetchWorkspaceDetails = async () => {
 		try {
 			const response = await workspaceRepository.getWorkspace(selectedWorkspaceId, tokens.access);
-			console.log(response);
+			console.log('Workspace data', response);
 			setWorkspace(response.data.data);
 
 			fetchProjects();
@@ -54,7 +63,7 @@ const WorkspaceDetailsPage = () => {
 	const fetchProjects = async () => {
 		try {
 			const response = await projectRepository.getProjects(projectFilters, tokens.access);
-			console.log(response, "response");
+			console.log('Project list', response);
 			const data = response.data.data;
 			setProjects(data);
 
@@ -113,6 +122,7 @@ const WorkspaceDetailsPage = () => {
 				<CreateProjectModal
 					setShowCreateProjectModal={setShowCreateProjectModal}
 					selectedWorkspaceId={selectedWorkspaceId}
+					setRefetchProject={setRefetchProject}
 					accessToken={tokens.access}
 				/>
 			}

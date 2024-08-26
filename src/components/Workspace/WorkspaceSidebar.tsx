@@ -1,6 +1,23 @@
 import React from 'react'
+import Button from '../Common/Button'
+import { ButtonType } from '../../types/Button'
 
-const WorkspaceSidebar = ({ workspace, projectList, selectedProjectId, showSidebar, setShowSidebar, setShowCreateProjectModal }: { workspace: any, projectList: any[], selectedProjectId: string, showSidebar: boolean, setShowSidebar: React.Dispatch<React.SetStateAction<boolean>>, setShowCreateProjectModal: React.Dispatch<React.SetStateAction<boolean>> }) => {
+interface WorkspaceSidebarProps {
+	workspace: any;
+	projectList: any[];
+	selectedProjectId: string;
+	showSidebar: boolean;
+	setShowSidebar: React.Dispatch<React.SetStateAction<boolean>>;
+	setShowCreateProjectModal: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+interface ProjectCardProps {
+	project: any;
+	isActive: boolean;
+	workspaceId: string;
+}
+
+const WorkspaceSidebar: React.FC<WorkspaceSidebarProps> = ({ workspace, projectList, selectedProjectId, showSidebar, setShowSidebar, setShowCreateProjectModal }) => {
 	return (
 		<div className='workspaceSidebar'>
 			<div className='workspaceSidebar__header'>
@@ -22,12 +39,15 @@ const WorkspaceSidebar = ({ workspace, projectList, selectedProjectId, showSideb
 					<p>
 						Projects
 					</p>
-					<span
-						className='pointer createProjectBtn'
+					<Button
+						icon='fa-solid fa-plus'
+						type={ButtonType.Button}
+						className=''
 						onClick={() => setShowCreateProjectModal(true)}
-					><i className="fa-solid fa-plus pointer"></i>
-					</span>
-
+						style={{
+							backgroundColor: 'transparent',
+						}}
+					/>
 				</div>
 				<div className='projectList__content'>
 					{
@@ -46,11 +66,17 @@ const WorkspaceSidebar = ({ workspace, projectList, selectedProjectId, showSideb
 	)
 }
 
-const ProjectCard = ({ project, isActive, workspaceId }: { project: any, isActive: boolean, workspaceId: string }) => {
+const ProjectCard: React.FC<ProjectCardProps> = ({ project, isActive, workspaceId }) => {
 	return (
-		<a href={`/workspace/${workspaceId}/${project.uuid}`} className={`projectCard ${isActive ? 'active' : ''}`}>
-			<img src='https://trello-logos.s3.amazonaws.com/c95e52bc93e8086fa1ab432d40ef5300/170.png' alt='workspace' />
-			<p>{project.title.length > 20 ? project.title.slice(0, 20) + '...' : project.title}</p>
+		<a
+			href={`/workspace/${workspaceId}/${project.uuid}`}
+			className={`projectCard ${isActive ? 'active' : ''}`}>
+			<img
+				src='https://trello-logos.s3.amazonaws.com/c95e52bc93e8086fa1ab432d40ef5300/170.png'
+				alt='workspace' />
+			<p>
+				{project.title.length > 20 ? project.title.slice(0, 20) + '...' : project.title}
+			</p>
 		</a>
 	)
 }

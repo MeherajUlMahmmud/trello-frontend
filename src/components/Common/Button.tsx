@@ -1,4 +1,5 @@
 import { ButtonProps } from '../../types/Button';
+import '../../styles/button.scss';
 
 const Button = ({ icon, text, type, className, isDisabled = false, onClick, style }: ButtonProps) => {
 	return (
@@ -13,7 +14,7 @@ const Button = ({ icon, text, type, className, isDisabled = false, onClick, styl
 			}}
 		>
 			{icon && <i className={icon}></i>}
-			<span>{text}</span>
+			{text && <span>{text}</span>}
 		</button>
 	)
 }

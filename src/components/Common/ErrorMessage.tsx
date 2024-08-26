@@ -1,8 +1,6 @@
-import React from 'react'
-
 const ErrorMessage = ({ errorMessage }: { errorMessage: string }) => {
 	return (
-		<div>
+		<div className='errorMessage'>
 			<p>{errorMessage}</p>
 		</div>
 	)

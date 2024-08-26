@@ -1,6 +1,11 @@
-import React from 'react'
+import React from 'react';
 
-const WorkspaceMiniSidebar = ({ showSidebar, setShowSidebar }: { showSidebar: boolean, setShowSidebar: React.Dispatch<React.SetStateAction<boolean>> }) => {
+interface WorkspaceMiniSidebarProps {
+	showSidebar: boolean;
+	setShowSidebar: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+const WorkspaceMiniSidebar: React.FC<WorkspaceMiniSidebarProps> = ({ showSidebar, setShowSidebar }) => {
 	return (
 		<div className='workspaceMiniSidebar'>
 			<div className='open_sidebar_btn'>

@@ -4,12 +4,14 @@
 	width: 100%;
 	height: calc(100vh - 60px);
 	overflow: hidden;
-	// border: 1px solid yellow;
 
 	.workspaceSidebar {
 		width: 300px;
 		height: 100vh;
 		padding: 10px;
+		display: flex;
+		flex-direction: column;
+		gap: 0.4rem;
 		background-color: #1d2125;
 
 		&__header {
@@ -46,29 +48,17 @@
 		.projectList {
 			display: flex;
 			flex-direction: column;
+			width: 100%;
 
 			&__header {
 				display: flex;
 				flex-direction: row;
 				justify-content: space-between;
 				align-items: center;
-				padding: 10px;
 
 				p {
-					font-size: 16px;
+					font-size: 14px;
 					font-weight: 600;
-				}
-
-				.createProjectBtn {
-					display: flex;
-					align-items: center;
-					gap: 5px;
-					border-radius: 5px;
-					padding: 5px;
-
-					&:hover {
-						background-color: #333c44;
-					}
 				}
 			}
 
@@ -80,8 +70,9 @@
 				.projectCard {
 					display: flex;
 					align-items: center;
+					gap: 5px;
 					border-radius: 5px;
-					padding: 5px;
+					padding: 0.5rem;
 					color: #fff;
 
 					&:hover {
@@ -94,12 +85,12 @@
 					}
 
 					p {
-						font-size: 16px;
+						font-size: 14px;
 					}
 					img {
-						margin-right: 10px;
-						width: 40px;
-						height: 30px;
+						max-width: 35px;
+						height: 25px;
+						border-radius: 5px;
 						object-fit: contain;
 					}
 				}
@@ -204,8 +195,8 @@
 					padding: 10px;
 
 					p {
-						font-size: 16px;
-						font-weight: 600;
+						font-size: 14px;
+						font-weight: bold;
 					}
 				}
 
@@ -230,13 +221,6 @@
 						p {
 							font-size: 14px;
 							font-weight: 600;
-						}
-
-						.addCardBtn {
-							display: flex;
-							justify-content: center;
-							align-items: center;
-							gap: 5px;
 						}
 					}
 				}

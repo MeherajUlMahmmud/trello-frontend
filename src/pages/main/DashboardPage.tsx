@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { workspaceRepository } from '../../repositories/workspace';
 import { handleAPIError } from '../../repositories/utils';
-import { closeModal, logout } from '../../utils/utils';
+import { logout } from '../../utils/utils';
 import { loadLocalStorage } from '../../utils/persistLocalStorage';
 
 import '../../styles/dashboard.scss';
@@ -11,6 +11,8 @@ import '../../styles/dashboard.scss';
 import WorkspaceDetail from '../../components/Dashboard/WorkspaceDetail';
 import DashboardSidebar from '../../components/Dashboard/DashboardSidebar';
 import CreateProjectModal from '../../components/Project/CreateProjectModal';
+import CreateWorkspaceModal from '../../components/Workspace/CreateWorkspaceModal';
+import UpdateWorkspaceModal from '../../components/Workspace/UpdateWorkspaceModal';
 
 const DashboardPage = () => {
   const navigate = useNavigate();
@@ -29,7 +31,11 @@ const DashboardPage = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   const [showCreateProjectModal, setShowCreateProjectModal] = useState(false);
+  const [showCreateWorkspaceModal, setShowCreateWorkspaceModal] = useState(false);
   const [showUpdateWorkspaceModal, setShowUpdateWorkspaceModal] = useState(false);
+
+  const [refetchWorkspace, setRefetchWorkspace] = useState(false);
+  const [refetchProject, setRefetchProject] = useState(false);
 
   useEffect(() => {
     if (!user || !tokens) {
@@ -41,10 +47,17 @@ const DashboardPage = () => {
     fetchWorkspaces();
   }, []);
 
+  useEffect(() => {
+    if (refetchWorkspace) {
+      fetchWorkspaces();
+      setRefetchWorkspace(false);
+    }
+  }, [refetchWorkspace]);
+
   const fetchWorkspaces = async () => {
     try {
       const response = await workspaceRepository.getWorkspaces(workspaceFilters, tokens.access);
-      console.log(response);
+      console.log('Workspace list data', response);
       const data = response.data.data;
 
       setWorkspaceList(data);
@@ -73,11 +86,14 @@ const DashboardPage = () => {
                   workspaceList={workspaceList}
                   selectedWorkspaceId={selectedWorkspaceId}
                   setSelectedWorkspaceId={setSelectedWorkspaceId}
+                  setShowCreateWorkspaceModal={setShowCreateWorkspaceModal}
                 />
                 <WorkspaceDetail
                   selectedWorkspaceId={selectedWorkspaceId}
                   setShowCreateProjectModal={setShowCreateProjectModal}
                   setShowUpdateWorkspaceModal={setShowUpdateWorkspaceModal}
+                  refetchProject={refetchProject}
+                  setRefetchProject={setRefetchProject}
                   accessToken={tokens.access}
                 />
               </>
@@ -94,6 +110,16 @@ const DashboardPage = () => {
         <CreateProjectModal
           setShowCreateProjectModal={setShowCreateProjectModal}
           selectedWorkspaceId={selectedWorkspaceId}
+          setRefetchProject={setRefetchProject}
+          accessToken={tokens.access}
+        />
+      }
+
+      {
+        showCreateWorkspaceModal &&
+        <CreateWorkspaceModal
+          setShowCreateWorkspaceModal={setShowCreateWorkspaceModal}
+          setRefetchWorkspace={setRefetchWorkspace}
           accessToken={tokens.access}
         />
       }
@@ -103,63 +129,12 @@ const DashboardPage = () => {
         <UpdateWorkspaceModal
           workspace={workspaceList.find((item: any) => item.id === selectedWorkspaceId)}
           setShowUpdateWorkspaceModal={setShowUpdateWorkspaceModal}
+          setRefetchWorkspace={setRefetchWorkspace}
+          accessToken={tokens.access}
         />
       }
     </>
   )
 }
 
-const UpdateWorkspaceModal = ({
-  workspace, setShowUpdateWorkspaceModal }: { workspace: any, setShowUpdateWorkspaceModal: React.Dispatch<React.SetStateAction<boolean>> }) => {
-  const [workspaceInfo, setWorkspaceInfo] = useState({
-    workspaceName: workspace.title,
-    workspaceDescription: workspace.description,
-  });
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLTextAreaElement>) => {
-    setWorkspaceInfo({
-      ...workspaceInfo,
-      [e.target.name]: e.target.value,
-    });
-  };
-
-  return (
-    <div className='modal__wrapper' onClick={(e) => closeModal(e, setShowUpdateWorkspaceModal)}>
-      <div className='modal'>
-        <div className='closeModal' onClick={() => setShowUpdateWorkspaceModal(false)}>
-          <i className="fa-solid fa-xmark"></i>
-        </div>
-        <div className='modal__header'>
-          <h1>Update Workspace</h1>
-        </div>
-        <div className='modal__body'>
-          <div className='modal__body__form'>
-            <div className='form__group'>
-              <label htmlFor='workspaceName'>Workspace Name</label>
-              <input type='text' placeholder='Workspace Name'
-                name='workspaceName'
-                value={workspaceInfo.workspaceName}
-                onChange={(e) => handleChange(e)}
-              />
-            </div>
-            <div className='form__group'>
-              <label htmlFor='workspaceDescription'>Workspace Description</label>
-              <textarea placeholder='Workspace Description'
-                name='workspaceDescription'
-                value={workspaceInfo.workspaceDescription}
-                onChange={(e) => handleChange(e)}
-              />
-            </div>
-            <div className='form__actions'>
-              <button type='submit' className='btn w-100'>
-                Update
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  )
-}
-
-export default DashboardPage
+export default DashboardPage;

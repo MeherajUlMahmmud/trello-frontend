@@ -2,41 +2,26 @@ import { ButtonType } from '../../types/Button'
 import Button from '../Common/Button'
 import WorkspaceDropdown from './WorkspaceDropdown'
 
-const DashboardSidebar = ({ workspaceList, selectedWorkspaceId, setSelectedWorkspaceId }: { workspaceList: any[], selectedWorkspaceId: string, setSelectedWorkspaceId: React.Dispatch<React.SetStateAction<any>> }) => {
+interface DashboardSidebarProps {
+	workspaceList: any[];
+	selectedWorkspaceId: string;
+	setSelectedWorkspaceId: React.Dispatch<React.SetStateAction<any>>;
+	setShowCreateWorkspaceModal: React.Dispatch<React.SetStateAction<boolean>>;
+}
 
-	// const sidebarActionList: SidebarActionItem[] = [
-	// 	{
-	// 		id: 1,
-	// 		name: 'Projects',
-	// 		icon: 'fa-solid fa-tasks',
-	// 		url: '/username/boards'
-	// 	},
-	// ];
-
+const DashboardSidebar: React.FC<DashboardSidebarProps> = ({ workspaceList, selectedWorkspaceId, setSelectedWorkspaceId, setShowCreateWorkspaceModal }) => {
 	return (
 		<div className='dashboardSidebar'>
-			{/* <div className='dashboardSidebar__actions'>
-				{
-					sidebarActionList.map((item, index) => (
-						<SidebarAction
-							key={index}
-							item={item}
-						/>
-					))
-				}
-			</div>
-			<hr /> */}
 			<div className='dashboardSidebar__workspaces'>
 				<div className='dashboardSidebar__workspaces__header'>
-					<small>
+					<p>
 						Workspaces
-					</small>
+					</p>
 					<Button
 						icon='fa-solid fa-plus'
-						text=''
 						type={ButtonType.Button}
 						className=''
-						// onClick={() => setShowCreateWorkspaceModal(true)}
+						onClick={() => setShowCreateWorkspaceModal(true)}
 						style={{
 							backgroundColor: 'transparent',
 						}}
@@ -51,11 +36,10 @@ const DashboardSidebar = ({ workspaceList, selectedWorkspaceId, setSelectedWorks
 							setSelectedWorkspaceId={setSelectedWorkspaceId}
 						/>
 					))
-
 				}
 			</div>
 		</div>
 	)
 }
 
-export default DashboardSidebar
+export default DashboardSidebar;

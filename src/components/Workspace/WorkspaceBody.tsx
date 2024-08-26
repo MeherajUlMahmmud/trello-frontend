@@ -182,51 +182,51 @@ const WorkspaceBody = ({ showSidebar, selectedProjectId, accessToken }: { showSi
 					</div>
 				</div>
 
-				<DragDropContext onDragEnd={handleDragEnd}>
+				{/* <DragDropContext onDragEnd={handleDragEnd}>
 					<Droppable droppableId="all-boards" direction="horizontal" type="board">
-						{(provided: any) => (
-							<div
-								className='workspaceBody__content'
-								ref={provided.innerRef}
-								{...provided.droppableProps}
-							>
-								{!isLoading && boards.map((board: any, index: number) => (
-									<Draggable draggableId={board.id} index={index} key={board.id}>
-										{(provided: any) => (
-											<div
-												ref={provided.innerRef}
-												{...provided.draggableProps}
-												{...provided.dragHandleProps}
-											>
-												<Board
-													key={board.id}
-													board={board}
-													setSelectedCardId={setSelectedCardId}
-													setShowCardDetailsModal={setShowCardDetailsModal}
-													accessToken={accessToken}
-													navigate={navigate}
-												/>
-											</div>
-										)}
-									</Draggable>
-								))}
-								{provided.placeholder}
-								<Button
-									icon='fa-solid fa-plus'
-									text='Add Board'
-									type={ButtonType.Button}
-									className=''
-									// onClick={() => setShowCardDetailsModal(true)}
-									style={{
-										backgroundColor: '#333c44',
-										minWidth: '300px',
-										height: '55px',
-									}}
-								/>
-							</div>
-						)}
-					</Droppable>
-				</DragDropContext>
+						{(provided: any) => ( */}
+				<div
+					className='workspaceBody__content'
+				// ref={provided.innerRef}
+				// {...provided.droppableProps}
+				>
+					{!isLoading && boards.map((board: any, index: number) => (
+						// <Draggable draggableId={board.id} index={index} key={board.id}>
+						// 	{(provided: any) => (
+						<div
+						// ref={provided.innerRef}
+						// {...provided.draggableProps}
+						// {...provided.dragHandleProps}
+						>
+							<Board
+								key={board.id}
+								board={board}
+								setSelectedCardId={setSelectedCardId}
+								setShowCardDetailsModal={setShowCardDetailsModal}
+								accessToken={accessToken}
+								navigate={navigate}
+							/>
+						</div>
+						// )}
+						// 	</Draggable>
+					))}
+					{/* {provided.placeholder} */}
+					<Button
+						icon='fa-solid fa-plus'
+						text='Add Another Board'
+						type={ButtonType.Button}
+						className=''
+						// onClick={() => setShowCardDetailsModal(true)}
+						style={{
+							backgroundColor: '#333c44',
+							minWidth: '300px',
+							height: '55px',
+						}}
+					/>
+				</div>
+				{/* )} */}
+				{/* </Droppable>
+				</DragDropContext> */}
 			</div>
 
 			{
@@ -311,76 +311,79 @@ const Board = ({ board, setSelectedCardId, setShowCardDetailsModal, accessToken,
 	};
 
 	return (
-		<Droppable droppableId={board.id} type="card">
-			{(provided: any) => (
-				<div className='board' ref={provided.innerRef} {...provided.droppableProps}>
-					<div className='board__header'>
-						<div>
-							{
-								boardNameClicked ? (
-									<input
-										type='text'
-										placeholder='Board Name'
-										ref={boardNameInputRef}
-										value={boardData.title}
-										onChange={(e) => handleChangeBoardTitle(e)}
-										onKeyDown={(e) => e.key === 'Enter' && updateBoardData()}
-									/>
-								) : (
-									<p onClick={() => setBoardNameClicked(!boardNameClicked)}>
-										{boardData.title.length > 20 ? boardData.title.slice(0, 20) + '...' : boardData.title}
-									</p>
-								)
-							}
-						</div>
-						<div>
-							<i className="fa-solid fa-ellipsis"></i>
-						</div>
-					</div>
-					<div className='board__content'>
-						{!isLoading && cardList?.length > 0 && cardList.map((card: any, index: number) => (
-							<Draggable draggableId={card.id} index={index} key={card.id}>
-								{(provided: any) => (
-									<div
-										ref={provided.innerRef}
-										{...provided.draggableProps}
-										{...provided.dragHandleProps}
-									>
-										<Card
-											key={card.id}
-											card={card}
-											setSelectedCardId={setSelectedCardId}
-											setShowCardDetailsModal={setShowCardDetailsModal}
-										/>
-									</div>
-								)}
-							</Draggable>
-						))}
-						{provided.placeholder}
-						<Button
-							icon='fa-solid fa-plus'
-							text='Add Card'
-							type={ButtonType.Button}
-							className='w-100'
-							// onClick={() => setShowCardDetailsModal(true)}
-							style={{
-								backgroundColor: '#333c44',
-							}}
-						/>
-					</div>
+		// <Droppable droppableId={board.id} type="card">
+		// 	{(provided: any) => (
+		<div className='board'
+		// ref={provided.innerRef} {...provided.droppableProps}
+		>
+			<div className='board__header'>
+				<div>
+					{
+						boardNameClicked ? (
+							<input
+								type='text'
+								placeholder='Board Name'
+								ref={boardNameInputRef}
+								value={boardData.title}
+								onChange={(e) => handleChangeBoardTitle(e)}
+								onKeyDown={(e) => e.key === 'Enter' && updateBoardData()}
+							/>
+						) : (
+							<p onClick={() => setBoardNameClicked(!boardNameClicked)}>
+								{boardData.title.length > 20 ? boardData.title.slice(0, 20) + '...' : boardData.title}
+							</p>
+						)
+					}
 				</div>
-			)}
-		</Droppable>
+				<div>
+					<i className="fa-solid fa-ellipsis"></i>
+				</div>
+			</div>
+			<div className='board__content'>
+				{!isLoading && cardList?.length > 0 && cardList.map((card: any, index: number) => (
+					// <Draggable draggableId={card.id} index={index} key={card.id}>
+					// 	{(provided: any) => (
+					// 		<div
+					// 			ref={provided.innerRef}
+					// 			{...provided.draggableProps}
+					// 			{...provided.dragHandleProps}
+					// 		>
+					<Card
+						key={card.id}
+						card={card}
+						setSelectedCardId={setSelectedCardId}
+						setShowCardDetailsModal={setShowCardDetailsModal}
+					/>
+					// 		</div>
+					// 	)}
+					// </Draggable>
+				))}
+				{/* {provided.placeholder} */}
+				<Button
+					icon='fa-solid fa-plus'
+					text='Add Card'
+					type={ButtonType.Button}
+					className='w-100'
+					// onClick={() => setShowCardDetailsModal(true)}
+					style={{
+						backgroundColor: 'transparent',
+						justifyContent: 'normal',
+					}}
+				/>
+			</div>
+		</div>
+		// 	)}
+		// </Droppable>
 	);
 };
 
 const Card = ({ card, setSelectedCardId, setShowCardDetailsModal }: { card: any, setSelectedCardId: any, setShowCardDetailsModal: any }) => {
 	return (
 		<div className='card'
-		// onClick={() => {
-		// 	setSelectedCardId(card.id);
-		// 	setShowCardDetailsModal(true);
-		// }}
+			onClick={() => {
+				setSelectedCardId(card.id);
+				setShowCardDetailsModal(true);
+			}}
 		>
 			<p>{card.title}</p>
 		</div>

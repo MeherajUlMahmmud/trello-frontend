@@ -1,22 +1,24 @@
-import { useState } from "react";
+import React, { useState } from "react";
+import { workspaceRepository } from "../../repositories/workspace";
 import ErrorMessage from "../Common/ErrorMessage";
-import { projectRepository } from "../../repositories/project";
-import { closeModal } from "../../utils/utils";
 import Button from "../Common/Button";
 import { ButtonType } from "../../types/Button";
+import { closeModal } from "../../utils/utils";
 
-interface CreateProjectModalProps {
-	setShowCreateProjectModal: React.Dispatch<React.SetStateAction<boolean>>;
-	selectedWorkspaceId: string;
-	setRefetchProject: React.Dispatch<React.SetStateAction<boolean>>;
+interface CreateWorkspaceModalProps {
+	setShowCreateWorkspaceModal: React.Dispatch<React.SetStateAction<boolean>>;
+	setRefetchWorkspace: React.Dispatch<React.SetStateAction<boolean>>;
 	accessToken: string;
 }
 
-const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ setShowCreateProjectModal, selectedWorkspaceId, setRefetchProject, accessToken }) => {
-	const [projectInfo, setProjectInfo] = useState({
+const CreateWorkspaceModal: React.FC<CreateWorkspaceModalProps> = ({
+	setShowCreateWorkspaceModal,
+	setRefetchWorkspace,
+	accessToken,
+}) => {
+	const [workspaceInfo, setWorkspaceInfo] = useState({
 		title: '',
 		description: '',
-		workspace: selectedWorkspaceId,
 	});
 
 	const [loading, setLoading] = useState(false)
@@ -24,8 +26,8 @@ const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ setShowCreatePr
 	const [errorMessage, setErrorMessage] = useState('')
 
 	const handleChange = (e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLTextAreaElement>) => {
-		setProjectInfo({
-			...projectInfo,
+		setWorkspaceInfo({
+			...workspaceInfo,
 			[e.target.name]: e.target.value,
 		});
 	};
@@ -40,13 +42,13 @@ const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ setShowCreatePr
 		setLoading(true);
 
 		try {
-			const response = await projectRepository.createProject(projectInfo, accessToken);
+			const response = await workspaceRepository.createWorkspace(workspaceInfo, accessToken);
 			console.log(response);
 			setLoading(false);
 			setIsError(false);
 			setErrorMessage('');
-			setShowCreateProjectModal(false);
-			setRefetchProject(true);
+			setShowCreateWorkspaceModal(false);
+			setRefetchWorkspace(true);
 		} catch (error: any) {
 			console.log(error);
 			setLoading(false);
@@ -56,47 +58,42 @@ const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ setShowCreatePr
 	};
 
 	return (
-		<div className='modal__wrapper' onClick={(e) => closeModal(e, setShowCreateProjectModal)}>
+		<div className='modal__wrapper' onClick={(e) => closeModal(e, setShowCreateWorkspaceModal)}>
 			<div className='modal'>
-				<div className='closeModal' onClick={() => setShowCreateProjectModal(false)}>
+				<div className='closeModal' onClick={() => setShowCreateWorkspaceModal(false)}>
 					<i className="fa-solid fa-xmark"></i>
 				</div>
 				<div className='modal__header'>
-					<h1>Create Project</h1>
+					<h1>Create Workspace</h1>
 				</div>
 				<div className='modal__body'>
 					<form className='modal__body__form' onSubmit={(e) => handleSubmit(e)}>
 						<div className='form__group'>
-							<label htmlFor='title'>Project Title</label>
-							<input type='text' placeholder='Project Title'
+							<label htmlFor='title'>Workspace Title</label>
+							<input type='text' placeholder='Workspace Title'
 								name='title'
-								value={projectInfo.title}
+								value={workspaceInfo.title}
 								onChange={(e) => handleChange(e)}
 								required
 								autoFocus
 							/>
 						</div>
 						<div className='form__group'>
-							<label htmlFor='description'>Project Description</label>
-							<textarea placeholder='Project Description'
+							<label htmlFor='description'>Workspace Description</label>
+							<textarea placeholder='Workspace Description'
 								name='description'
-								value={projectInfo.description}
+								value={workspaceInfo.description}
 								onChange={(e) => handleChange(e)}
 							/>
 						</div>
-						{/* <div className='form__group'>
-              <label htmlFor='projectImage'>Project Image</label>
-              <input type='file' name='projectImage'
-                onChange={(e) => handleChange(e)}
-              />
-            </div> */}
 						{
 							isError && <ErrorMessage errorMessage={errorMessage} />
 						}
 						<div className='form__actions'>
 							<Button
-								text={loading ? 'Loading...' : 'Create'}
+								text={loading ? 'Loading...' : 'Create Workspace'}
 								type={ButtonType.Submit}
+								isDisabled={loading}
 								style={{
 									backgroundColor: '#007bff',
 								}}
@@ -110,4 +107,4 @@ const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ setShowCreatePr
 	)
 }
 
-export default CreateProjectModal;
+export default CreateWorkspaceModal;
