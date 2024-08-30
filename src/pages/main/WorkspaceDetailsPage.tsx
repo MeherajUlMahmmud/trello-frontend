@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { loadLocalStorage } from '../../utils/persistLocalStorage';
 import { projectRepository } from '../../repositories/project';
 import { workspaceRepository } from '../../repositories/workspace';
 import { handleAPIError } from '../../repositories/utils';
+import { useAuth } from '../../context/AuthContext';
 
 import '../../styles/workspace.scss';
 
@@ -16,7 +16,7 @@ import CreateProjectModal from '../../components/Project/CreateProjectModal';
 const WorkspaceDetailsPage = () => {
 	const navigate = useNavigate();
 
-	const tokens = loadLocalStorage('tokens');
+	const { tokens } = useAuth();
 
 	const selectedWorkspaceId = window.location.pathname.split('/')[2];
 	const selectedProjectId = window.location.pathname.split('/')[3];

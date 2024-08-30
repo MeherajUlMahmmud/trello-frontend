@@ -128,6 +128,9 @@ const SignUpPage = () => {
 								type={ButtonType.Submit}
 								isDisabled={loading}
 								className={`button w-100 ${loading && 'disabled'}`}
+								style={{
+									backgroundColor: '#007bff',
+								}}
 							/>
 						</div>
 					</form>

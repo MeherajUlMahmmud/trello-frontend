@@ -6,6 +6,7 @@ import { dashboardRoute, forgotPasswordRoute, signUpRoute } from '../../utils/ap
 import { saveLocalStorage } from '../../utils/persistLocalStorage'
 import { authRepository } from '../../repositories/auth';
 import { ButtonType } from '../../types/Button';
+import { useAuth } from '../../context/AuthContext';
 
 import '../../styles/auth.scss';
 
@@ -20,10 +21,11 @@ const LoginPage = () => {
 		email: '',
 		password: ''
 	});
-	const [loading, setLoading] = useState(false)
-	const [isError, setIsError] = useState(false)
-	const [errorMessage, setErrorMessage] = useState('')
+	const [loading, setLoading] = useState(false);
+	const [isError, setIsError] = useState(false);
+	const [errorMessage, setErrorMessage] = useState('');
 
+	const { login } = useAuth();
 
 	const handleChangeLoginData = (e: any) => {
 		const { name, value } = e.target;
@@ -46,8 +48,12 @@ const LoginPage = () => {
 			const response = await authRepository.login(loginData);
 			console.log(response);
 			setLoading(false);
-			saveLocalStorage("user", response.data.user);
-			saveLocalStorage("tokens", response.data.tokens);
+			const userData = response.data.user;
+			const tokenData = response.data.tokens;
+
+			// Save the user information in the context
+			login(userData, tokenData);
+
 			// navigate('/');
 			navigate(location?.state?.from?.pathname || dashboardRoute);
 		} catch (error: any) {
@@ -108,6 +114,9 @@ const LoginPage = () => {
 								type={ButtonType.Submit}
 								isDisabled={loading}
 								className={`button w-100 ${loading && 'disabled'}`}
+								style={{
+									backgroundColor: '#007bff',
+								}}
 							/>
 						</div>
 					</form>
