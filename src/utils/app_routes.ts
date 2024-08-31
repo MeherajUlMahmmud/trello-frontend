@@ -11,3 +11,5 @@ export const dashboardRoute = "/dashboard";
 export const aboutRoute = "/about";
 export const contactUsRoute = "/contact";
 export const profileRoute = "/profile";
+
+export const errorRoute = "/error";

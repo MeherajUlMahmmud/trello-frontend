@@ -16,6 +16,7 @@ const AboutPage = lazy(() => import('./pages/utility/AboutPage'));
 const ContactUsPage = lazy(() => import('./pages/utility/ContactUsPage'));
 const LoginPage = lazy(() => import('./pages/auth/LoginPage'));
 const ProfilePage = lazy(() => import('./pages/user/ProfilePage'));
+const ErrorPage = lazy(() => import('./pages/utility/ErrorPage'));
 
 const App: React.FC = () => {
   return (
@@ -33,6 +34,7 @@ const App: React.FC = () => {
 
             <Route path={loginRoute} element={<LoginPage />} />
             <Route path={signUpRoute} element={<SignUpPage />} />
+            <Route path="/*" element={<ErrorPage />} />
           </Routes>
         </Suspense>
       </Router>

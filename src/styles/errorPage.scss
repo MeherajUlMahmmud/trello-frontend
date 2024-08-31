@@ -1,0 +1,19 @@
+.errorPage {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	height: 100vh;
+
+	.errorPage__title {
+		font-size: 3rem;
+		font-weight: 700;
+		margin-bottom: 1rem;
+	}
+
+	.errorPage__subtitle {
+		font-size: 1.5rem;
+		font-weight: 400;
+		margin-bottom: 1rem;
+	}
+}
