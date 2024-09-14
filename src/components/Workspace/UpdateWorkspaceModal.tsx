@@ -1,9 +1,8 @@
 import { useState } from "react";
 import { workspaceRepository } from "../../repositories/workspace";
-import { ButtonType } from "../../types/Button";
 import { closeModal } from "../../utils/utils";
-import Button from "../Common/Button";
 import ErrorMessage from "../Common/ErrorMessage";
+import CustomButton, { ButtonType } from "../Common/Button";
 
 interface UpdateWorkspaceModalProps {
 	workspace: any;
@@ -92,7 +91,7 @@ const UpdateWorkspaceModal: React.FC<UpdateWorkspaceModalProps> = ({
 							isError && <ErrorMessage errorMessage={errorMessage} />
 						}
 						<div className='form__actions'>
-							<Button
+							<CustomButton
 								text={loading ? 'Loading...' : 'Update Workspace'}
 								type={ButtonType.Submit}
 								isDisabled={loading}

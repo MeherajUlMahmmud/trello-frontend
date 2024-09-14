@@ -7,9 +7,7 @@ import { projectRepository } from '../../repositories/project';
 import { handleAPIError } from '../../repositories/utils';
 import { boardRepository } from '../../repositories/board';
 import { cardRepository } from '../../repositories/card';
-import { ButtonType } from '../../types/Button';
-
-import Button from '../Common/Button';
+import CustomButton, { ButtonType } from '../Common/Button';
 
 const WorkspaceBody = ({ showSidebar, selectedProjectId, accessToken }: { showSidebar: boolean, selectedProjectId: string, accessToken: string }) => {
 	const navigate = useNavigate();
@@ -153,30 +151,31 @@ const WorkspaceBody = ({ showSidebar, selectedProjectId, accessToken }: { showSi
 			<div className='workspaceBody'
 				style={{ width: showSidebar ? 'calc(100% - 300px)' : 'calc(100% - 20px)' }}
 			>
-				<div className='workspaceBody__header'>
-					<div className='workspaceBody__header__left'>
-						<div className='headerItem'>
+				<div className='flex justify-between items-center w-full p-2 bg-gray-900'>
+					<div className='flex justify-between items-center w-full'>
+						<div className='flex justify-center items-center gap-2 px-4 py-2 cursor-pointer rounded-md'>
 							{
 								!isLoading &&
 									projectNameClicked ? (
 									<input
 										type='text'
 										placeholder='Project Name'
+										className='text-lg font-medium text-white p-2 rounded-md bg-gray-600'
 										ref={projectNameInputRef}
 										value={updatedProject.title}
 										onChange={(e) => handleChangeProjectName(e)}
 										onKeyDown={(e) => e.key === 'Enter' && updateProjectData()}
 									/>
 								) : (
-									<p onClick={() => setProjectNameClicked(!projectNameClicked)}>
+									<p className='text-lg font-medium text-white p-2' onClick={() => setProjectNameClicked(!projectNameClicked)}>
 										{updatedProject.title}
 									</p>
 								)
 							}
 						</div>
 					</div>
-					<div className='workspaceBody__header__right'>
-						<div className='headerItem'>
+					<div className='flex justify-end items-center w-full'>
+						<div className='flex justify-center items-center gap-2 px-4 py-2 cursor-pointer rounded-md text-white hover:bg-gray-500'>
 							<i className="fa-solid fa-ellipsis"></i>
 						</div>
 					</div>
@@ -211,17 +210,12 @@ const WorkspaceBody = ({ showSidebar, selectedProjectId, accessToken }: { showSi
 						// 	</Draggable>
 					))}
 					{/* {provided.placeholder} */}
-					<Button
+					<CustomButton
 						icon='fa-solid fa-plus'
 						text='Add Another Board'
 						type={ButtonType.Button}
-						className=''
-						// onClick={() => setShowCardDetailsModal(true)}
-						style={{
-							backgroundColor: '#333c44',
-							minWidth: '300px',
-							height: '55px',
-						}}
+						className='w-full gap-2 px-4 py-2 text-sm font-medium text-white  cursor-pointer'
+					// onClick={() => setShowCardDetailsModal(true)}
 					/>
 				</div>
 				{/* )} */}
@@ -313,10 +307,10 @@ const Board = ({ board, setSelectedCardId, setShowCardDetailsModal, accessToken,
 	return (
 		// <Droppable droppableId={board.id} type="card">
 		// 	{(provided: any) => (
-		<div className='board'
+		<div className='flex flex-col gap-2 min-w-[300px] h-fit rounded-lg bg-gray-800 p-2'
 		// ref={provided.innerRef} {...provided.droppableProps}
 		>
-			<div className='board__header'>
+			<div className='flex justify-between items-center p-2'>
 				<div>
 					{
 						boardNameClicked ? (
@@ -329,17 +323,17 @@ const Board = ({ board, setSelectedCardId, setShowCardDetailsModal, accessToken,
 								onKeyDown={(e) => e.key === 'Enter' && updateBoardData()}
 							/>
 						) : (
-							<p onClick={() => setBoardNameClicked(!boardNameClicked)}>
+							<p className='text-sm font-medium text-white' onClick={() => setBoardNameClicked(!boardNameClicked)}>
 								{boardData.title.length > 20 ? boardData.title.slice(0, 20) + '...' : boardData.title}
 							</p>
 						)
 					}
 				</div>
-				<div>
+				<div className='flex text-white cursor-pointer' onClick={() => { }}>
 					<i className="fa-solid fa-ellipsis"></i>
 				</div>
 			</div>
-			<div className='board__content'>
+			<div className='flex flex-col gap-3 w-full'>
 				{!isLoading && cardList?.length > 0 && cardList.map((card: any, index: number) => (
 					// <Draggable draggableId={card.id} index={index} key={card.id}>
 					// 	{(provided: any) => (
@@ -359,16 +353,12 @@ const Board = ({ board, setSelectedCardId, setShowCardDetailsModal, accessToken,
 					// </Draggable>
 				))}
 				{/* {provided.placeholder} */}
-				<Button
+				<CustomButton
 					icon='fa-solid fa-plus'
 					text='Add Card'
 					type={ButtonType.Button}
-					className='w-100'
-					// onClick={() => setShowCardDetailsModal(true)}
-					style={{
-						backgroundColor: 'transparent',
-						justifyContent: 'normal',
-					}}
+					className='w-full gap-2 px-4 py-2 text-sm font-medium text-white bg-gray-700 hover:bg-gray-600 cursor-pointer'
+				// onClick={() => setShowCardDetailsModal(true)}
 				/>
 			</div>
 		</div>
@@ -379,13 +369,13 @@ const Board = ({ board, setSelectedCardId, setShowCardDetailsModal, accessToken,
 
 const Card = ({ card, setSelectedCardId, setShowCardDetailsModal }: { card: any, setSelectedCardId: any, setShowCardDetailsModal: any }) => {
 	return (
-		<div className='card'
+		<div className='flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-900 rounded-md bg-gray-600 hover:bg-gray-700 cursor-pointer'
 			onClick={() => {
 				setSelectedCardId(card.id);
 				setShowCardDetailsModal(true);
 			}}
 		>
-			<p>{card.title}</p>
+			<p className='text-md font-medium text-white'>{card.title}</p>
 		</div>
 	)
 };

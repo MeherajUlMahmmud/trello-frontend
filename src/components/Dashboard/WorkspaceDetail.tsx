@@ -1,14 +1,13 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { ButtonType } from '../../types/Button';
 import { workspaceRepository } from '../../repositories/workspace';
 import { handleAPIError } from '../../repositories/utils';
 import { projectRepository } from '../../repositories/project';
 
 import '../../styles/workspace.scss';
+import CustomButton, { ButtonType } from '../Common/Button';
 
-import Button from '../Common/Button';
 
 interface WorkspaceDetailProps {
 	selectedWorkspaceId: string;
@@ -89,47 +88,39 @@ const WorkspaceDetail: React.FC<WorkspaceDetailProps> = ({ selectedWorkspaceId, 
 				</div>
 			</div>
 		) : (
-			<div className='workspaceDetail'>
-				<div className='workspaceDetail__top_section'>
-					<div className='top_section__img'>
-						<img src='https://trello-logos.s3.amazonaws.com/c95e52bc93e8086fa1ab432d40ef5300/170.png' alt='workspace' />
+			<div
+				className='flex flex-col gap-4 w-4/5'
+			>
+				<div className='flex items-center gap-4 mt-4 mr-4 mb-4' >
+					<div className='w-16 rounded-lg'>
+						<img className='w-full' src='https://trello-logos.s3.amazonaws.com/c95e52bc93e8086fa1ab432d40ef5300/170.png' alt='workspace' />
 					</div>
-					<div className='top_section__content'>
-						<p>
-							{currentWorkSpace.title}
-						</p>
-						<Button
-							icon='fa-solid fa-pen'
-							type={ButtonType.Button}
-							className=''
-							onClick={() => setShowUpdateWorkspaceModal(true)}
-							style={{
-								backgroundColor: 'transparent',
-							}}
-						/>
-					</div>
+					<p className='text-2xl font-bold'>
+						{currentWorkSpace.title}
+					</p>
+					<CustomButton
+						icon='fa-solid fa-pen'
+						type={ButtonType.Button}
+						className=''
+						onClick={() => setShowUpdateWorkspaceModal(true)}
+					/>
 				</div>
 				<hr />
-				<div className='workspaceDetail__bottom_section'>
-					<div className='bottom_section__header'>
-						<div className='row space-between w-100'>
-							<div className='row'>
-								<i className="fa-solid fa-tasks"></i>
-								<p>Your Projects</p>
-							</div>
-							<Button
-								icon='fa-solid fa-plus'
-								text='Create Project'
-								type={ButtonType.Button}
-								className=''
-								onClick={() => setShowCreateProjectModal(true)}
-								style={{
-									backgroundColor: '#333c44',
-								}}
-							/>
+				<div className='flex flex-col gap-4 mt-4 w-full'>
+					<div className='flex justify-between items-center w-full'>
+						<div className='flex items-center gap-2'>
+							<i className="fa-solid fa-tasks"></i>
+							<p className='text-lg font-medium'>Your Projects</p>
 						</div>
+						<CustomButton
+							icon='fa-solid fa-plus'
+							text='Create Project'
+							type={ButtonType.Button}
+							className='gap-2 px-4 py-2 text-sm font-medium'
+							onClick={() => setShowCreateProjectModal(true)}
+						/>
 					</div>
-					<div className='bottom_section__content'>
+					<div className='grid grid-cols-4 gap-4'>
 						{
 							projects.length === 0 ? (
 								<div></div>
@@ -152,10 +143,10 @@ const WorkspaceDetail: React.FC<WorkspaceDetailProps> = ({ selectedWorkspaceId, 
 
 const ProjectCard: React.FC<ProjectCardProps> = ({ project, selectedWorkspaceId }) => {
 	return (
-		<div className='bottom_section__content_item'
+		<div className='flex items-start gap-2 border-2 border-gray-200 px-4 py-2 text-sm font-medium text-gray-900 rounded-md hover:bg-gray-100 cursor-pointer h-20'
 			onClick={() => window.location.href = `/workspace/${selectedWorkspaceId}/${project.uuid}`}
 		>
-			<div className='row'>
+			<div className='flex items-center gap-2'>
 				<i className="fa-solid fa-project-diagram"></i>
 				<span>{project.title.length > 30 ? project.title.slice(0, 30) + '...' : project.title}</span>
 			</div>

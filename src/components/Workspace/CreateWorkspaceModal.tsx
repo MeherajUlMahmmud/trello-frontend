@@ -1,9 +1,8 @@
 import React, { useState } from "react";
 import { workspaceRepository } from "../../repositories/workspace";
 import ErrorMessage from "../Common/ErrorMessage";
-import Button from "../Common/Button";
-import { ButtonType } from "../../types/Button";
 import { closeModal } from "../../utils/utils";
+import CustomButton, { ButtonType } from "../Common/Button";
 
 interface CreateWorkspaceModalProps {
 	setShowCreateWorkspaceModal: React.Dispatch<React.SetStateAction<boolean>>;
@@ -90,7 +89,7 @@ const CreateWorkspaceModal: React.FC<CreateWorkspaceModalProps> = ({
 							isError && <ErrorMessage errorMessage={errorMessage} />
 						}
 						<div className='form__actions'>
-							<Button
+							<CustomButton
 								text={loading ? 'Loading...' : 'Create Workspace'}
 								type={ButtonType.Submit}
 								isDisabled={loading}

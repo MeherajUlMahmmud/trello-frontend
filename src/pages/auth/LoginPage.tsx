@@ -1,17 +1,22 @@
 import { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import {
+	Card,
+	CardContent,
+	CardDescription,
+	CardFooter,
+	CardHeader,
+	CardTitle,
+} from "@/components/ui/card";
 
 import { appName } from '../../utils/constants'
 import { dashboardRoute, forgotPasswordRoute, signUpRoute } from '../../utils/app_routes'
-import { saveLocalStorage } from '../../utils/persistLocalStorage'
 import { authRepository } from '../../repositories/auth';
-import { ButtonType } from '../../types/Button';
 import { useAuth } from '../../context/AuthContext';
 
-import '../../styles/auth.scss';
-
 import ErrorMessage from '../../components/Common/ErrorMessage';
-import Button from '../../components/Common/Button';
+import CustomButton, { ButtonType } from '../../components/Common/Button';
+import InputField from '@/components/InputField';
 
 const LoginPage = () => {
 	const navigate = useNavigate();
@@ -65,69 +70,64 @@ const LoginPage = () => {
 	};
 
 	return (
-		<div className='authPage maxWidth'>
-			<div className="authContainer">
-				<div className="loginPage">
-					<div className="headerSection">
-						<h1>{appName}</h1>
-						<h3>
+		<div className='flex justify-center items-center h-dvh m-2'>
+			<Card className="w-[450px]">
+				<form onSubmit={(e) => handleSubmit(e)}>
+					<CardHeader>
+						<CardTitle className='text-center text-3xl font-bold'>{appName}</CardTitle>
+						<CardDescription className='text-center text-lg'>
 							Sign in to start your session
-						</h3>
-					</div>
-					<form method="post" className='loginForm'
-						onSubmit={(e) => handleSubmit(e)}
-					>
-						<div className="inputField">
-							<input
-								type="email"
-								className="input"
-								placeholder="Email Address"
+						</CardDescription>
+					</CardHeader>
+					<CardContent>
+						<div className="grid w-full items-center gap-4">
+							<InputField
 								name="email"
+								type="email"
+								value={loginData.email}
+								label="Email Address"
+								placeholder="Email Address"
 								onChange={(e) => handleChangeLoginData(e)}
-								required
-								autoFocus
+								isRequired={true}
+								autoFocus={true}
 							/>
-						</div>
-						<div className="inputField">
-							<input
-								type="password"
-								className="input"
-								placeholder="Password"
+							<InputField
 								name="password"
+								type="password"
+								value={loginData.password}
+								label="Password"
+								placeholder="Password"
 								onChange={(e) => handleChangeLoginData(e)}
-								required
+								isRequired={true}
 							/>
+							<div className='flex justify-end w-full gap-2'>
+								<small className="text-sm font-medium text-gray-500">
+									<a href={forgotPasswordRoute}>
+										Forgot your password?
+									</a>
+								</small>
+							</div>
 						</div>
+					</CardContent>
 
-						<small className="forgotPassword align-right">
-							<a href={forgotPasswordRoute}>
-								Forgot your password?
-							</a>
-						</small>
-						{
-							!loading && isError && <ErrorMessage errorMessage={errorMessage} />
-						}
+					{
+						!loading && isError && <ErrorMessage errorMessage={errorMessage} />
+					}
 
-						<div className="actionsSection">
-							<Button
-								text={loading ? 'Loading...' : 'Sign In'}
-								type={ButtonType.Submit}
-								isDisabled={loading}
-								className={`button w-100 ${loading && 'disabled'}`}
-								style={{
-									backgroundColor: '#007bff',
-								}}
-							/>
-						</div>
-					</form>
-
-					<small className="signUp align-center">
-						<a href={signUpRoute} className=''>
+					<CardFooter className="flex justify-center">
+						<CustomButton
+							text={loading ? 'Loading...' : 'Sign In'}
+							type={ButtonType.Submit}
+							isDisabled={loading}
+						/>
+					</CardFooter>
+					<div className='flex justify-center items-center gap-2 mb-4'>
+						<a href={signUpRoute} className='text-sm font-medium text-blue-600 hover:text-blue-700'>
 							Don't have an account? Sign Up
 						</a>
-					</small>
-				</div>
-			</div>
+					</div>
+				</form>
+			</Card>
 		</div>
 	)
 }

@@ -1,6 +1,5 @@
 import React from 'react'
-import Button from '../Common/Button'
-import { ButtonType } from '../../types/Button'
+import CustomButton, { ButtonType } from '../Common/Button';
 
 interface WorkspaceSidebarProps {
 	workspace: any;
@@ -19,37 +18,34 @@ interface ProjectCardProps {
 
 const WorkspaceSidebar: React.FC<WorkspaceSidebarProps> = ({ workspace, projectList, selectedProjectId, showSidebar, setShowSidebar, setShowCreateProjectModal }) => {
 	return (
-		<div className='workspaceSidebar'>
-			<div className='workspaceSidebar__header'>
-				<div className='row'>
-					<img src='https://trello-logos.s3.amazonaws.com/c95e52bc93e8086fa1ab432d40ef5300/170.png' alt='workspace' />
-					<p>
+		<div className='flex flex-col gap-2 w-[300px] h-screen bg-gray-800 p-5'>
+			<div className='flex justify-between items-center w-full'>
+				<div className='flex items-center gap-2'>
+					<img className='w-12 h-12' src='https://trello-logos.s3.amazonaws.com/c95e52bc93e8086fa1ab432d40ef5300/170.png' alt='workspace' />
+					<p className='text-lg font-medium text-white'>
 						{workspace.title}
 					</p>
 				</div>
-				<div className='collapse_icon'
+				<div className='flex items-center justify-center text-white p-2 rounded-full cursor-pointer w-8 hover:bg-gray-500'
 					onClick={() => setShowSidebar(!showSidebar)}
 				>
 					<i className="fa-solid fa-chevron-left"></i>
 				</div>
 			</div>
-			<div></div>
-			<div className='projectList'>
-				<div className='projectList__header'>
-					<p>
+			<hr className='border-gray-500' />
+			<div className='flex flex-col gap-2 w-full'>
+				<div className='flex justify-between items-center w-full'>
+					<p className='text-sm font-medium text-white'>
 						Projects
 					</p>
-					<Button
+					<CustomButton
 						icon='fa-solid fa-plus'
 						type={ButtonType.Button}
-						className=''
+						className='bg-white text-black'
 						onClick={() => setShowCreateProjectModal(true)}
-						style={{
-							backgroundColor: 'transparent',
-						}}
 					/>
 				</div>
-				<div className='projectList__content'>
+				<div className='flex flex-col gap-3 w-full'>
 					{
 						projectList && projectList?.length > 0 && projectList.map((project: any) => (
 							<ProjectCard
@@ -70,11 +66,11 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, isActive, workspaceI
 	return (
 		<a
 			href={`/workspace/${workspaceId}/${project.uuid}`}
-			className={`projectCard ${isActive ? 'active' : ''}`}>
-			<img
+			className={`flex items-center gap-2 ${isActive ? 'active' : ''}`}>
+			<img className='w-8 h-8'
 				src='https://trello-logos.s3.amazonaws.com/c95e52bc93e8086fa1ab432d40ef5300/170.png'
 				alt='workspace' />
-			<p>
+			<p className='text-md font-medium text-white'>
 				{project.title.length > 20 ? project.title.slice(0, 20) + '...' : project.title}
 			</p>
 		</a>

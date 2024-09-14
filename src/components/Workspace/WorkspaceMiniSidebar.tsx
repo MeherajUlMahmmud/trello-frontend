@@ -8,9 +8,9 @@ interface WorkspaceMiniSidebarProps {
 const WorkspaceMiniSidebar: React.FC<WorkspaceMiniSidebarProps> = ({ showSidebar, setShowSidebar }) => {
 	return (
 		<div className='workspaceMiniSidebar'>
-			<div className='open_sidebar_btn'>
+			<div className='open_sidebar_btn'
+				onClick={() => setShowSidebar(!showSidebar)}>
 				<i className="fa-solid fa-chevron-right"
-					onClick={() => setShowSidebar(!showSidebar)}
 				></i>
 			</div>
 		</div>

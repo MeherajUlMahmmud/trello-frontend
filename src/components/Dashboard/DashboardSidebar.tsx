@@ -1,5 +1,5 @@
-import { ButtonType } from '../../types/Button'
-import Button from '../Common/Button'
+import CustomButton from '../Common/Button';
+import { ButtonType } from '../Common/Button'
 import WorkspaceDropdown from './WorkspaceDropdown'
 
 interface DashboardSidebarProps {
@@ -11,20 +11,17 @@ interface DashboardSidebarProps {
 
 const DashboardSidebar: React.FC<DashboardSidebarProps> = ({ workspaceList, selectedWorkspaceId, setSelectedWorkspaceId, setShowCreateWorkspaceModal }) => {
 	return (
-		<div className='dashboardSidebar'>
-			<div className='dashboardSidebar__workspaces'>
-				<div className='dashboardSidebar__workspaces__header'>
-					<p>
+		<div className='p-5 w-72'>
+			<div className='flex flex-col items-center gap-2 w-full'>
+				<div className='flex justify-between items-center gap-2 text-lg w-full'>
+					<p className='text-sm font-medium'>
 						Workspaces
 					</p>
-					<Button
+					<CustomButton
 						icon='fa-solid fa-plus'
 						type={ButtonType.Button}
-						className=''
+						className='m-0 px-4 py-2 text-sm font-medium'
 						onClick={() => setShowCreateWorkspaceModal(true)}
-						style={{
-							backgroundColor: 'transparent',
-						}}
 					/>
 				</div>
 				{

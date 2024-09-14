@@ -6,7 +6,7 @@ import { handleAPIError } from '../../repositories/utils';
 import { logout } from '../../utils/utils';
 import { loadLocalStorage } from '../../utils/persistLocalStorage';
 
-import '../../styles/dashboard.scss';
+// import '../../styles/dashboard.scss';
 
 import WorkspaceDetail from '../../components/Dashboard/WorkspaceDetail';
 import DashboardSidebar from '../../components/Dashboard/DashboardSidebar';
@@ -74,7 +74,7 @@ const DashboardPage = () => {
 
   return (
     <>
-      <div className='maxWidth dashboardPage'>
+      <div className='maxWidth flex justify-center gap-4 h-dvh w-1/5'>
 
         {
           isLoading ? (

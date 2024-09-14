@@ -3,12 +3,19 @@ import { useState } from 'react';
 import { authRepository } from '../../repositories/auth';
 import { loginRoute } from '../../utils/app_routes';
 import { appName } from '../../utils/constants';
-import { ButtonType } from '../../types/Button';
 
-import '../../styles/auth.scss';
-
-import Button from '../../components/Common/Button';
+import { ButtonType } from '../../components/Common/Button';
 import ErrorMessage from '../../components/Common/ErrorMessage';
+import {
+	Card,
+	CardContent,
+	CardDescription,
+	CardFooter,
+	CardHeader,
+	CardTitle,
+} from "@/components/ui/card";
+import CustomButton from '../../components/Common/Button';
+import InputField from '@/components/InputField';
 
 const SignUpPage = () => {
 	const [signUpData, setSignUpData] = useState({
@@ -55,95 +62,87 @@ const SignUpPage = () => {
 	};
 
 	return (
-		<div className='authPage maxWidth'>
-			<div className="authContainer">
-				<div className="signUpPage">
-					<div className="headerSection">
-						<h1>{appName}</h1>
-						<h3>
+		<div className='flex justify-center items-center h-dvh m-2'>
+			<Card className="w-[450px]">
+				<form onSubmit={(e) => handleSubmit(e)}>
+					<CardHeader>
+						<CardTitle className='text-center text-3xl font-bold'>{appName}</CardTitle>
+						<CardDescription className='text-center text-lg'>
 							Get Started
-						</h3>
-					</div>
-					<form method="post" className='loginForm'
-						onSubmit={(e) => handleSubmit(e)}
-					>
-						<div className="inputField">
-							<input
-								type="text"
-								className="input"
-								placeholder="First Name"
+						</CardDescription>
+					</CardHeader>
+					<CardContent>
+						<div className="grid w-full items-center gap-4">
+							<InputField
 								name="first_name"
-								onChange={(e) => handleChangeSignUpData(e)}
-								required
-								autoFocus
-							/>
-						</div>
-						<div className="inputField">
-							<input
 								type="text"
-								className="input"
-								placeholder="Last Name"
+								value={signUpData.first_name}
+								label="First Name"
+								placeholder="First Name"
+								onChange={(e) => handleChangeSignUpData(e)}
+								isRequired={true}
+								autoFocus={true}
+							/>
+							<InputField
 								name="last_name"
+								type="text"
+								value={signUpData.last_name}
+								label="Last Name"
+								placeholder="Last Name"
 								onChange={(e) => handleChangeSignUpData(e)}
-								required
+								isRequired={true}
 							/>
-						</div>
-						<div className="inputField">
-							<input
-								type="email"
-								className="input"
-								placeholder="Email Address"
+							<InputField
 								name="email"
+								type="email"
+								value={signUpData.email}
+								label="Email Address"
+								placeholder="Email Address"
 								onChange={(e) => handleChangeSignUpData(e)}
-								required
+								isRequired={true}
 							/>
-						</div>
-						<div className="inputField">
-							<input
-								type="password"
-								className="input"
-								placeholder="Password"
+							<InputField
 								name="password1"
-								onChange={(e) => handleChangeSignUpData(e)}
-								required
-							/>
-						</div>
-						<div className="inputField">
-							<input
 								type="password"
-								className="input"
-								placeholder="Confirm Password"
-								name="password2"
+								value={signUpData.password1}
+								label="Password"
+								placeholder="Password"
 								onChange={(e) => handleChangeSignUpData(e)}
-								required
+								isRequired={true}
+							/>
+							<InputField
+								name="password2"
+								type="password"
+								value={signUpData.password2}
+								label="Confirm Password"
+								placeholder="Confirm Password"
+								onChange={(e) => handleChangeSignUpData(e)}
+								isRequired={true}
 							/>
 						</div>
-						{
-							!loading && isError && <ErrorMessage errorMessage={errorMessage} />
-						}
+					</CardContent>
 
-						<div className="actionsSection">
-							<Button
-								text={loading ? 'Loading...' : 'Sign Up'}
-								type={ButtonType.Submit}
-								isDisabled={loading}
-								className={`button w-100 ${loading && 'disabled'}`}
-								style={{
-									backgroundColor: '#007bff',
-								}}
-							/>
-						</div>
-					</form>
+					{
+						!loading && isError && <ErrorMessage errorMessage={errorMessage} />
+					}
 
-					<small className="">
-						<a href={loginRoute} className=''>
+					<CardFooter className="flex justify-center">
+						<CustomButton
+							text={loading ? 'Loading...' : 'Sign Up'}
+							type={ButtonType.Submit}
+							isDisabled={loading}
+						/>
+					</CardFooter>
+
+					<div className='flex justify-center items-center gap-2 mb-4'>
+						<a href={loginRoute} className='text-sm font-medium text-blue-600 hover:text-blue-700'>
 							Already have an account? Sign In
 						</a>
-					</small>
-				</div>
-			</div>
+					</div>
+				</form>
+			</Card>
 		</div>
 	)
 }
 
-export default SignUpPage
+export default SignUpPage;

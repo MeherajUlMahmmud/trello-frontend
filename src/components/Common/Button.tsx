@@ -1,22 +1,28 @@
-import { ButtonProps } from '../../types/Button';
-import '../../styles/button.scss';
+import { Button } from "@/components/ui/button";
 
-const Button = ({ icon, text, type, className, isDisabled = false, onClick, style }: ButtonProps) => {
+export enum ButtonType {
+	Button = "button",
+	Submit = "submit",
+	Reset = "reset",
+}
+
+export interface ButtonProps {
+	icon?: string;
+	text?: string;
+	type: ButtonType;
+	className?: string;
+	isDisabled?: boolean;
+	onClick?: () => void;
+	style?: React.CSSProperties;
+}
+
+const CustomButton = ({ icon, text, type, className, isDisabled = false, onClick, style }: ButtonProps) => {
 	return (
-		<button
-			type={type}
-			className={className}
-			disabled={isDisabled}
-			onClick={onClick}
-			style={{
-				...style,
-				gap: icon && text ? '0.5rem' : '0rem',
-			}}
-		>
+		<Button className={className} type={type} disabled={isDisabled} onClick={onClick} style={style}>
 			{icon && <i className={icon}></i>}
 			{text && <span>{text}</span>}
-		</button>
+		</Button>
 	)
 }
 
-export default Button;
+export default CustomButton;

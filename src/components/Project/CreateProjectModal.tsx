@@ -2,8 +2,7 @@ import { useState } from "react";
 import ErrorMessage from "../Common/ErrorMessage";
 import { projectRepository } from "../../repositories/project";
 import { closeModal } from "../../utils/utils";
-import Button from "../Common/Button";
-import { ButtonType } from "../../types/Button";
+import CustomButton, { ButtonType } from "../Common/Button";
 
 interface CreateProjectModalProps {
 	setShowCreateProjectModal: React.Dispatch<React.SetStateAction<boolean>>;
@@ -94,7 +93,7 @@ const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ setShowCreatePr
 							isError && <ErrorMessage errorMessage={errorMessage} />
 						}
 						<div className='form__actions'>
-							<Button
+							<CustomButton
 								text={loading ? 'Loading...' : 'Create'}
 								type={ButtonType.Submit}
 								style={{
