@@ -1,5 +1,4 @@
 import { logout } from "../utils/utils";
-import { errorRoute } from "../utils/app_routes";
 
 export const handleAPIError = (error: any, navigate: any) => {
 	console.error(error);

@@ -1,4 +1,4 @@
-import { PROJECT_URL } from "../utils/urls";
+import { ApiRoutes } from "@/utils/constants";
 import {
 	sendGetRequest,
 	sendPatchRequest,
@@ -9,18 +9,21 @@ export const projectRepository = {
 	getProjects: async (filters: any, accessToken: string) => {
 		const paramStr = new URLSearchParams(filters).toString();
 		const res = await sendGetRequest(
-			PROJECT_URL + "list/?" + paramStr,
+			ApiRoutes.PROJECT_URL + "list/?" + paramStr,
 			accessToken
 		);
 		return res;
 	},
 	getProject: async (id: string, accessToken: string) => {
-		const res = await sendGetRequest(PROJECT_URL + `${id}/`, accessToken);
+		const res = await sendGetRequest(
+			ApiRoutes.PROJECT_URL + `${id}/`,
+			accessToken
+		);
 		return res;
 	},
 	createProject: async (data: any, accessToken: string) => {
 		const res = await sendPostRequest(
-			PROJECT_URL + "create/",
+			ApiRoutes.PROJECT_URL + "create/",
 			data,
 			accessToken
 		);
@@ -28,7 +31,7 @@ export const projectRepository = {
 	},
 	updateProject: async (id: string, data: any, accessToken: string) => {
 		const res = await sendPatchRequest(
-			PROJECT_URL + `${id}/update/`,
+			ApiRoutes.PROJECT_URL + `${id}/update/`,
 			data,
 			accessToken
 		);
@@ -40,7 +43,7 @@ export const projectRepository = {
 		accessToken: string
 	) => {
 		const res = await sendPatchRequest(
-			PROJECT_URL + `${projectId}/update-board-order/`,
+			ApiRoutes.PROJECT_URL + `${projectId}/update-board-order/`,
 			data,
 			accessToken
 		);

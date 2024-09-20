@@ -9,14 +9,13 @@ import {
 	CardTitle,
 } from "@/components/ui/card";
 
-import { appName } from '@/utils/constants'
-import { dashboardRoute, forgotPasswordRoute, signUpRoute } from '@/utils/app_routes'
 import { authRepository } from '@/repositories/auth';
 import { useAuth } from '@/context/AuthContext';
 
 import ErrorMessage from '@/components/Common/ErrorMessage';
 import CustomButton, { ButtonType } from '@/components/Common/Button';
 import InputField from '@/components/InputField';
+import { AppConstants, AppUrls } from '@/utils/constants';
 
 const LoginPage = () => {
 	const navigate = useNavigate();
@@ -60,7 +59,7 @@ const LoginPage = () => {
 			login(userData, tokenData);
 
 			// navigate('/');
-			navigate(location?.state?.from?.pathname || dashboardRoute);
+			navigate(location?.state?.from?.pathname || AppUrls.dashboardRoute);
 		} catch (error: any) {
 			console.log(error);
 			setLoading(false);
@@ -74,7 +73,7 @@ const LoginPage = () => {
 			<Card className="w-[450px] bg-gray-800 border m-2 shadow-md">
 				<form onSubmit={(e) => handleSubmit(e)}>
 					<CardHeader>
-						<CardTitle className='text-center text-white text-3xl font-bold'>{appName}</CardTitle>
+						<CardTitle className='text-center text-white text-3xl font-bold'>{AppConstants.appName}</CardTitle>
 						<CardDescription className='text-center text-white text-lg'>
 							Sign in to start your session
 						</CardDescription>
@@ -99,7 +98,7 @@ const LoginPage = () => {
 								isRequired={true}
 							/>
 							<div className='flex justify-end w-full gap-2'>
-								<a href={forgotPasswordRoute} className="text-sm font-medium text-blue-500 hover:text-blue-600">
+								<a href={AppUrls.forgotPasswordRoute} className="text-sm font-medium text-blue-500 hover:text-blue-600">
 									Forgot your password?
 								</a>
 							</div>
@@ -121,7 +120,7 @@ const LoginPage = () => {
 						/>
 					</CardFooter>
 					<div className='flex justify-center items-center gap-2 mb-4'>
-						<a href={signUpRoute} className="text-sm font-medium text-blue-500 hover:text-blue-600">
+						<a href={AppUrls.signUpRoute} className="text-sm font-medium text-blue-500 hover:text-blue-600">
 							Don't have an account? Sign Up
 						</a>
 					</div>

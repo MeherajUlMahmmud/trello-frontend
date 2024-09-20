@@ -1,7 +1,7 @@
 import React, { Suspense, lazy } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
-import { aboutRoute, contactUsRoute, dashboardRoute, homeRoute, loginRoute, profileRoute, signUpRoute } from './utils/app_routes';
+import { AppUrls } from './utils/constants';
 
 import { ErrorBoundary } from './components/ErrorBoundary';
 import Spinner from './components/Loading/Spinner';
@@ -25,15 +25,15 @@ const App: React.FC = () => {
         <Navbar />
         <Suspense fallback={<Spinner />}>
           <Routes>
-            <Route path={homeRoute} element={<HomePage />} />
-            <Route path={dashboardRoute} element={<DashboardPage />} />
-            <Route path="/workspace/:id/:projectId" element={<WorkspaceDetailsPage />} />
-            <Route path={aboutRoute} element={<AboutPage />} />
-            <Route path={contactUsRoute} element={<ContactUsPage />} />
-            <Route path={profileRoute} element={<ProfilePage />} />
+            <Route path={AppUrls.homeRoute} element={<HomePage />} />
+            <Route path={AppUrls.dashboardRoute} element={<DashboardPage />} />
+            <Route path={AppUrls.initialWorkspaceDetailsRoute} element={<WorkspaceDetailsPage />} />
+            <Route path={AppUrls.aboutRoute} element={<AboutPage />} />
+            <Route path={AppUrls.contactUsRoute} element={<ContactUsPage />} />
+            <Route path={AppUrls.profileRoute} element={<ProfilePage />} />
 
-            <Route path={loginRoute} element={<LoginPage />} />
-            <Route path={signUpRoute} element={<SignUpPage />} />
+            <Route path={AppUrls.loginRoute} element={<LoginPage />} />
+            <Route path={AppUrls.signUpRoute} element={<SignUpPage />} />
             <Route path="/*" element={<ErrorPage />} />
           </Routes>
         </Suspense>

@@ -1,4 +1,4 @@
-import { loginRoute } from "./app_routes";
+import { AppUrls } from "./constants";
 import { deleteLocalStorage } from "./persistLocalStorage";
 
 export const capitalize = (str: string) => {
@@ -140,5 +140,5 @@ export const notFound = (error: any) => {
 export const logout = (navigate: any) => {
 	deleteLocalStorage("user");
 	deleteLocalStorage("tokens");
-	navigate(loginRoute);
+	navigate(AppUrls.loginRoute);
 };

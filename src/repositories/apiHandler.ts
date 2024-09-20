@@ -1,10 +1,10 @@
+import { ApiRoutes } from "@/utils/constants";
 import axios from "axios";
-import { BASE_URL } from "../utils/urls";
 
 export const sendAuthRequest = (url: string, data: any) => {
 	return axios({
 		method: "POST",
-		url: BASE_URL + url,
+		url: ApiRoutes.BASE_URL + url,
 		data: data,
 		headers: {
 			"Content-Type": "application/json",
@@ -15,7 +15,7 @@ export const sendAuthRequest = (url: string, data: any) => {
 export const sendUnauthenticatedGetRequest = (url: string) => {
 	return axios({
 		method: "GET",
-		url: BASE_URL + url,
+		url: ApiRoutes.BASE_URL + url,
 		headers: {
 			"Content-Type": "application/json",
 		},
@@ -25,7 +25,7 @@ export const sendUnauthenticatedGetRequest = (url: string) => {
 export const sendUnauthenticatedPostRequest = (url: string, data: any) => {
 	return axios({
 		method: "POST",
-		url: BASE_URL + url,
+		url: ApiRoutes.BASE_URL + url,
 		data: data,
 		headers: {
 			"Content-Type": "application/json",
@@ -36,7 +36,7 @@ export const sendUnauthenticatedPostRequest = (url: string, data: any) => {
 export const sendGetRequest = (url: string, accessToken: string) => {
 	return axios({
 		method: "GET",
-		url: BASE_URL + url,
+		url: ApiRoutes.BASE_URL + url,
 		headers: {
 			"Content-Type": "application/json",
 			Authorization: `Bearer ${accessToken}`,
@@ -52,7 +52,7 @@ export const sendPostRequest = (
 ) => {
 	return axios({
 		method: "POST",
-		url: BASE_URL + url,
+		url: ApiRoutes.BASE_URL + url,
 		data: data,
 		headers: {
 			"Content-Type": hasFile
@@ -71,7 +71,7 @@ export const sendPatchRequest = (
 ) => {
 	return axios({
 		method: "PATCH",
-		url: BASE_URL + url,
+		url: ApiRoutes.BASE_URL + url,
 		data: data,
 		headers: {
 			"Content-Type": hasFile
@@ -85,7 +85,7 @@ export const sendPatchRequest = (
 export const sendDeleteRequest = (url: string, accessToken: string) => {
 	return axios({
 		method: "DELETE",
-		url: BASE_URL + url,
+		url: ApiRoutes.BASE_URL + url,
 		headers: {
 			"Content-Type": "application/json",
 			Authorization: `Bearer ${accessToken}`,

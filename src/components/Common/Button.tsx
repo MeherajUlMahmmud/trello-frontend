@@ -18,7 +18,7 @@ export interface ButtonProps {
 
 const CustomButton = ({ icon, text, type, className, isDisabled = false, onClick, style }: ButtonProps) => {
 	return (
-		<Button className={className} type={type} disabled={isDisabled} onClick={onClick} style={style}>
+		<Button className={`${className} gap-2`} type={type} disabled={isDisabled} onClick={onClick} style={style}>
 			{icon && <i className={icon}></i>}
 			{text && <span>{text}</span>}
 		</Button>

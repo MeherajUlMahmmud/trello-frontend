@@ -1,8 +1,6 @@
 import { useState } from 'react';
 
 import { authRepository } from '@/repositories/auth';
-import { loginRoute } from '@/utils/app_routes';
-import { appName } from '@/utils/constants';
 
 import { ButtonType } from '@/components/Common/Button';
 import ErrorMessage from '@/components/Common/ErrorMessage';
@@ -16,6 +14,7 @@ import {
 } from "@/components/ui/card";
 import CustomButton from '@/components/Common/Button';
 import InputField from '@/components/InputField';
+import { AppConstants, AppUrls } from '@/utils/constants';
 
 const SignUpPage = () => {
 	const [signUpData, setSignUpData] = useState({
@@ -66,7 +65,7 @@ const SignUpPage = () => {
 			<Card className="w-[450px] bg-gray-800 border m-2 shadow-md">
 				<form onSubmit={(e) => handleSubmit(e)}>
 					<CardHeader>
-						<CardTitle className='text-center text-white text-3xl font-bold'>{appName}</CardTitle>
+						<CardTitle className='text-center text-white text-3xl font-bold'>{AppConstants.appName}</CardTitle>
 						<CardDescription className='text-center text-white text-lg'>
 							Get Started
 						</CardDescription>
@@ -138,7 +137,7 @@ const SignUpPage = () => {
 					</CardFooter>
 
 					<div className='flex justify-center items-center gap-2 mb-4'>
-						<a href={loginRoute} className="text-sm font-medium text-blue-500 hover:text-blue-600">
+						<a href={AppUrls.loginRoute} className="text-sm font-medium text-blue-500 hover:text-blue-600">
 							Already have an account? Sign In
 						</a>
 					</div>
