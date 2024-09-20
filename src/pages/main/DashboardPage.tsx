@@ -1,18 +1,17 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { workspaceRepository } from '../../repositories/workspace';
-import { handleAPIError } from '../../repositories/utils';
-import { logout } from '../../utils/utils';
-import { loadLocalStorage } from '../../utils/persistLocalStorage';
+import { workspaceRepository } from '@/repositories/workspace';
+import { handleAPIError } from '@/repositories/utils';
+import { logout } from '@/utils/utils';
+import { loadLocalStorage } from '@/utils/persistLocalStorage';
 
-// import '../../styles/dashboard.scss';
-
-import WorkspaceDetail from '../../components/Dashboard/WorkspaceDetail';
-import DashboardSidebar from '../../components/Dashboard/DashboardSidebar';
-import CreateProjectModal from '../../components/Project/CreateProjectModal';
-import CreateWorkspaceModal from '../../components/Workspace/CreateWorkspaceModal';
-import UpdateWorkspaceModal from '../../components/Workspace/UpdateWorkspaceModal';
+import WorkspaceDetail from '@/components/Dashboard/WorkspaceDetail';
+import DashboardSidebar from '@/components/Dashboard/DashboardSidebar';
+import CreateWorkspaceModal from '@/components/Workspace/CreateWorkspaceModal';
+import UpdateWorkspaceModal from '@/components/Workspace/UpdateWorkspaceModal';
+import CreateProjectModal from '@/components/Workspace/CreateProjectModal';
+import { Spinner } from '@/components/Loading/Spinner';
 
 const DashboardPage = () => {
   const navigate = useNavigate();
@@ -26,7 +25,8 @@ const DashboardPage = () => {
   }
 
   const [workspaceList, setWorkspaceList] = useState<any[]>([]);
-  const [selectedWorkspaceId, setSelectedWorkspaceId] = useState<any>(null);
+  const [selectedWorkspaceId, setSelectedWorkspaceId] = useState<string | null>(null);
+  const [focusedWorkspaceId, setFocusedWorkspaceId] = useState<string | null>(null);
 
   const [isLoading, setIsLoading] = useState(true);
 
@@ -57,13 +57,14 @@ const DashboardPage = () => {
   const fetchWorkspaces = async () => {
     try {
       const response = await workspaceRepository.getWorkspaces(workspaceFilters, tokens.access);
-      console.log('Workspace list data', response);
       const data = response.data.data;
 
       setWorkspaceList(data);
 
       if (data.length > 0) {
-        setSelectedWorkspaceId(response.data.data[0].id);
+        const firstWorkspaceId = data[0].id;
+        setSelectedWorkspaceId(firstWorkspaceId);
+        setFocusedWorkspaceId(firstWorkspaceId);
       }
       setIsLoading(false);
     } catch (error: any) {
@@ -74,36 +75,35 @@ const DashboardPage = () => {
 
   return (
     <>
-      <div className='maxWidth flex justify-center gap-4 h-dvh w-1/5'>
-
-        {
-          isLoading ? (
-            <i className="fa fa-spinner fa-spin"></i>
-          ) : (
-            workspaceList && workspaceList.length > 0 ? (
-              <>
-                <DashboardSidebar
-                  workspaceList={workspaceList}
-                  selectedWorkspaceId={selectedWorkspaceId}
-                  setSelectedWorkspaceId={setSelectedWorkspaceId}
-                  setShowCreateWorkspaceModal={setShowCreateWorkspaceModal}
-                />
-                <WorkspaceDetail
-                  selectedWorkspaceId={selectedWorkspaceId}
-                  setShowCreateProjectModal={setShowCreateProjectModal}
-                  setShowUpdateWorkspaceModal={setShowUpdateWorkspaceModal}
-                  refetchProject={refetchProject}
-                  setRefetchProject={setRefetchProject}
-                  accessToken={tokens.access}
-                />
-              </>
-            ) : (
-              <div className='maxWidth'>
-                <h1>No Workspaces</h1>
-              </div>
-            )
-          )
-        }
+      <div className='maxWidth flex justify-center gap-4  w-1/5 p-2'>
+        {isLoading ? (
+          <div className='flex flex-col gap-4 w-full'>
+            <Spinner />
+          </div>
+        ) : workspaceList && workspaceList.length > 0 ? (
+          <>
+            <DashboardSidebar
+              workspaceList={workspaceList}
+              selectedWorkspaceId={selectedWorkspaceId}
+              setSelectedWorkspaceId={setSelectedWorkspaceId}
+              setShowCreateWorkspaceModal={setShowCreateWorkspaceModal}
+              focusedWorkspaceId={focusedWorkspaceId}
+              setFocusedWorkspaceId={setFocusedWorkspaceId}
+            />
+            <WorkspaceDetail
+              selectedWorkspaceId={selectedWorkspaceId}
+              setShowCreateProjectModal={setShowCreateProjectModal}
+              setShowUpdateWorkspaceModal={setShowUpdateWorkspaceModal}
+              refetchProject={refetchProject}
+              setRefetchProject={setRefetchProject}
+              accessToken={tokens.access}
+            />
+          </>
+        ) : (
+          <div className='maxWidth'>
+            <h1>No Workspaces</h1>
+          </div>
+        )}
       </div>
       {
         showCreateProjectModal &&
