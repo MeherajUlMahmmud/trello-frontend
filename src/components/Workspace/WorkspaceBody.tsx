@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 
-import { closeModal } from '../../utils/utils';
 import { projectRepository } from '../../repositories/project';
 import { handleAPIError } from '../../repositories/utils';
 import { boardRepository } from '../../repositories/board';
@@ -19,10 +18,6 @@ const WorkspaceBody = ({ showSidebar, selectedProjectId, accessToken }: { showSi
 
 	const [boards, setBoards] = useState<any[]>([]);
 	const [isLoading, setIsLoading] = useState(true);
-
-	const [selectedCardId, setSelectedCardId] = useState<any>(null);
-
-	const [showCardDetailsModal, setShowCardDetailsModal] = useState<boolean>(false);
 
 	const handleClickOutside = (event: MouseEvent) => {
 		if (projectNameInputRef.current && !projectNameInputRef.current.contains(event.target as Node)) {
@@ -181,61 +176,50 @@ const WorkspaceBody = ({ showSidebar, selectedProjectId, accessToken }: { showSi
 					</div>
 				</div>
 
-				{/* <DragDropContext onDragEnd={handleDragEnd}>
+				<DragDropContext onDragEnd={handleDragEnd}>
 					<Droppable droppableId="all-boards" direction="horizontal" type="board">
-						{(provided: any) => ( */}
-				<div
-					className='workspaceBody__content'
-				// ref={provided.innerRef}
-				// {...provided.droppableProps}
-				>
-					{!isLoading && boards.map((board: any, index: number) => (
-						// <Draggable draggableId={board.id} index={index} key={board.id}>
-						// 	{(provided: any) => (
-						<div
-						// ref={provided.innerRef}
-						// {...provided.draggableProps}
-						// {...provided.dragHandleProps}
-						>
-							<Board
-								key={board.id}
-								board={board}
-								setSelectedCardId={setSelectedCardId}
-								setShowCardDetailsModal={setShowCardDetailsModal}
-								accessToken={accessToken}
-								navigate={navigate}
-							/>
-						</div>
-						// )}
-						// 	</Draggable>
-					))}
-					{/* {provided.placeholder} */}
-					<CustomButton
-						icon='fa-solid fa-plus'
-						text='Add Another Board'
-						type={ButtonType.Button}
-						className='w-full gap-2 px-4 py-2 text-sm font-medium text-white  cursor-pointer'
-					// onClick={() => setShowCardDetailsModal(true)}
-					/>
-				</div>
-				{/* )} */}
-				{/* </Droppable>
-				</DragDropContext> */}
+						{(provided: any) => (
+							<div
+								className='workspaceBody__content'
+								ref={provided.innerRef}
+								{...provided.droppableProps}
+							>
+								{!isLoading && boards.map((board: any, index: number) => (
+									<Draggable draggableId={board.id} index={index} key={board.id}>
+										{(provided: any) => (
+											<div
+												ref={provided.innerRef}
+												{...provided.draggableProps}
+												{...provided.dragHandleProps}
+											>
+												<Board
+													key={board.id}
+													board={board}
+													accessToken={accessToken}
+													navigate={navigate}
+												/>
+											</div>
+										)}
+									</Draggable>
+								))}
+								{provided.placeholder}
+								<CustomButton
+									icon='fa-solid fa-plus'
+									text='Add Another Board'
+									type={ButtonType.Button}
+									className='w-full gap-2 px-4 py-2 text-sm font-medium text-white  cursor-pointer'
+								// onClick={() => setShowCardDetailsModal(true)}
+								/>
+							</div>
+						)}
+					</Droppable>
+				</DragDropContext>
 			</div>
-
-			{
-				showCardDetailsModal && (
-					<CardDetailsModal
-						selectedCardId={selectedCardId}
-						setShowCardDetailsModal={setShowCardDetailsModal}
-					/>
-				)
-			}
 		</>
 	);
 };
 
-const Board = ({ board, setSelectedCardId, setShowCardDetailsModal, accessToken, navigate }: { board: any, setSelectedCardId: any, setShowCardDetailsModal: any, accessToken: string, navigate: any }) => {
+const Board = ({ board, accessToken, navigate }: { board: any, accessToken: string, navigate: any }) => {
 	const [boardData, setBoardData] = useState<any>(board);
 	const [cardList, setCardList] = useState<any[]>([]);
 	const [isLoading, setIsLoading] = useState(true);
@@ -345,8 +329,6 @@ const Board = ({ board, setSelectedCardId, setShowCardDetailsModal, accessToken,
 					<Card
 						key={card.id}
 						card={card}
-						setSelectedCardId={setSelectedCardId}
-						setShowCardDetailsModal={setShowCardDetailsModal}
 					/>
 					// 		</div>
 					// 	)}
@@ -367,159 +349,11 @@ const Board = ({ board, setSelectedCardId, setShowCardDetailsModal, accessToken,
 	);
 };
 
-const Card = ({ card, setSelectedCardId, setShowCardDetailsModal }: { card: any, setSelectedCardId: any, setShowCardDetailsModal: any }) => {
+const Card = ({ card }: { card: any }) => {
 	return (
-		<div className='flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-900 rounded-md bg-gray-600 hover:bg-gray-700 cursor-pointer'
-			onClick={() => {
-				setSelectedCardId(card.id);
-				setShowCardDetailsModal(true);
-			}}
-		>
-			<p className='text-md font-medium text-white'>{card.title}</p>
-		</div>
-	)
-};
-
-const CardDetailsModal = ({ selectedCardId, setShowCardDetailsModal }: { selectedCardId: any, setShowCardDetailsModal: any }) => {
-	const [cardHeaderClicked, setCardHeaderClicked] = useState<boolean>(false);
-	const cardHeaderInputRef = useRef<HTMLInputElement>(null);
-	const [cardDescriptionClicked, setCardDescriptionClicked] = useState<boolean>(false);
-	const cardDescriptionInputRef = useRef<HTMLInputElement>(null);
-
-	const cards = [
-		{
-			id: 1,
-			name: 'Card 1',
-			description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
-		},
-		{
-			id: 2,
-			name: 'Card 2',
-			description: null,
-		},
-		{
-			id: 3,
-			name: 'Card 3',
-			description: null,
-		},
-		{
-			id: 4,
-			name: 'Card 4',
-			description: null,
-		},
-		{
-			id: 5,
-			name: 'Card 5',
-			description: null,
-		},
-		{
-			id: 6,
-			name: 'Card 6',
-			description: null,
-		},
-		{
-			id: 7,
-			name: 'Card 7',
-			description: null,
-		},
-		{
-			id: 8,
-			name: 'Card 8',
-			description: null,
-		},
-		{
-			id: 9,
-			name: 'Card 9',
-			description: null,
-		},
-		{
-			id: 10,
-			name: 'Card 10',
-			description: null,
-		},
-	];
-
-	const [cardDetails, setCardDetails] = useState<any>({});
-
-	const handleClickOutside = (event: MouseEvent) => {
-		if (cardHeaderInputRef.current && !cardHeaderInputRef.current.contains(event.target as Node)) {
-			setCardHeaderClicked(false);
-		}
-
-		if (cardDescriptionInputRef.current && !cardDescriptionInputRef.current.contains(event.target as Node)) {
-			setCardDescriptionClicked(false);
-		}
-	};
-
-	useEffect(() => {
-		if (selectedCardId) {
-			setCardDetails({
-				id: selectedCardId,
-				name: cards.find((card: any) => card.id === selectedCardId)?.name,
-				description: cards.find((card: any) => card.id === selectedCardId)?.description,
-			});
-		}
-	}, [selectedCardId]);
-
-	useEffect(() => {
-		document.addEventListener('mousedown', handleClickOutside);
-		return () => {
-			document.removeEventListener('mousedown', handleClickOutside);
-		};
-	}, []);
-
-	return (
-		<div className='modal__wrapper' onClick={(e) => closeModal(e, setShowCardDetailsModal)}>
-			<div className='modal modal__cardDetails'>
-				<div className='closeModal' onClick={() => setShowCardDetailsModal(false)}>
-					<i className="fa-solid fa-xmark"></i>
-				</div>
-				<div className='modal__body'>
-					<div className='modal__body__item'>
-						<div>
-							<i className='fa-solid fa-circle-info'></i>
-						</div>
-						<div className='modal__body__item__content'>
-							{
-								cardHeaderClicked ? (
-									<input type='text' placeholder='Card Name' className='modal__body__item__content__input' ref={cardHeaderInputRef} />
-								) : (
-									<p onClick={() => setCardHeaderClicked(!cardHeaderClicked)}>
-										{cardDetails.name}
-									</p>
-								)
-							}
-						</div>
-					</div>
-					<div className='modal__body__item'>
-						<div>
-							<i className='fa-solid fa-list'></i>
-						</div>
-						<div className='modal__body__item__content'>
-							<p>
-								Description
-							</p>
-							<div>
-								{
-									cardDescriptionClicked ? (
-										<input type='text' placeholder='Card Description' className='modal__body__item__content__input' ref={cardDescriptionInputRef} />
-									) : (
-										cardDetails.description ? (
-											<p onClick={() => setCardDescriptionClicked(!cardDescriptionClicked)}>
-												{cardDetails.description}
-											</p>
-										) : (
-											<p className='noDescription' onClick={() => setCardDescriptionClicked(!cardDescriptionClicked)}>
-												Add a more detailed description...
-											</p>
-										)
-									)
-								}
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
+		<div className='flex justify-between items-start gap-2 px-2 py-2 text-sm font-medium  text-white rounded-md bg-gray-600 hover:bg-gray-700 cursor-pointer'>
+			<p className='w-full p-1'>{card.title}</p>
+			<i className='fa-solid fa-edit p-1 border border-transparent hover:border-white rounded-md' onClick={() => { }} />
 		</div>
 	)
 };
