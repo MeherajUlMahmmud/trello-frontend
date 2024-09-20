@@ -7,5 +7,5 @@ export const FORGOT_PASSWORD_URL = "/api/auth/reset-password/";
 
 export const WORKSPACE_URL = "/api/workspace/";
 export const PROJECT_URL = "/api/project/";
-export const BOARD_URL = "/api/boards/";
-export const CARD_URL = "/api/cards/";
+export const BOARD_URL = "/api/board/";
+export const CARD_URL = "/api/card/";

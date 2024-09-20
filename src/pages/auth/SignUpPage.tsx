@@ -62,12 +62,12 @@ const SignUpPage = () => {
 	};
 
 	return (
-		<div className='flex justify-center items-center h-dvh m-2'>
-			<Card className="w-[450px]">
+		<div className='flex justify-center items-center h-dvh'>
+			<Card className="w-[450px] bg-gray-800 border m-2 shadow-md">
 				<form onSubmit={(e) => handleSubmit(e)}>
 					<CardHeader>
-						<CardTitle className='text-center text-3xl font-bold'>{appName}</CardTitle>
-						<CardDescription className='text-center text-lg'>
+						<CardTitle className='text-center text-white text-3xl font-bold'>{appName}</CardTitle>
+						<CardDescription className='text-center text-white text-lg'>
 							Get Started
 						</CardDescription>
 					</CardHeader>
@@ -130,12 +130,15 @@ const SignUpPage = () => {
 						<CustomButton
 							text={loading ? 'Loading...' : 'Sign Up'}
 							type={ButtonType.Submit}
+							style={{
+								backgroundColor: "#007bff",
+							}}
 							isDisabled={loading}
 						/>
 					</CardFooter>
 
 					<div className='flex justify-center items-center gap-2 mb-4'>
-						<a href={loginRoute} className='text-sm font-medium text-blue-600 hover:text-blue-700'>
+						<a href={loginRoute} className="text-sm font-medium text-blue-500 hover:text-blue-600">
 							Already have an account? Sign In
 						</a>
 					</div>

@@ -70,12 +70,12 @@ const LoginPage = () => {
 	};
 
 	return (
-		<div className='flex justify-center items-center h-dvh m-2'>
-			<Card className="w-[450px]">
+		<div className='flex justify-center items-center h-dvh'>
+			<Card className="w-[450px] bg-gray-800 border m-2 shadow-md">
 				<form onSubmit={(e) => handleSubmit(e)}>
 					<CardHeader>
-						<CardTitle className='text-center text-3xl font-bold'>{appName}</CardTitle>
-						<CardDescription className='text-center text-lg'>
+						<CardTitle className='text-center text-white text-3xl font-bold'>{appName}</CardTitle>
+						<CardDescription className='text-center text-white text-lg'>
 							Sign in to start your session
 						</CardDescription>
 					</CardHeader>
@@ -86,7 +86,6 @@ const LoginPage = () => {
 								type="email"
 								value={loginData.email}
 								label="Email Address"
-								placeholder="Email Address"
 								onChange={(e) => handleChangeLoginData(e)}
 								isRequired={true}
 								autoFocus={true}
@@ -96,16 +95,13 @@ const LoginPage = () => {
 								type="password"
 								value={loginData.password}
 								label="Password"
-								placeholder="Password"
 								onChange={(e) => handleChangeLoginData(e)}
 								isRequired={true}
 							/>
 							<div className='flex justify-end w-full gap-2'>
-								<small className="text-sm font-medium text-gray-500">
-									<a href={forgotPasswordRoute}>
-										Forgot your password?
-									</a>
-								</small>
+								<a href={forgotPasswordRoute} className="text-sm font-medium text-blue-500 hover:text-blue-600">
+									Forgot your password?
+								</a>
 							</div>
 						</div>
 					</CardContent>
@@ -118,11 +114,14 @@ const LoginPage = () => {
 						<CustomButton
 							text={loading ? 'Loading...' : 'Sign In'}
 							type={ButtonType.Submit}
+							style={{
+								backgroundColor: "#007bff",
+							}}
 							isDisabled={loading}
 						/>
 					</CardFooter>
 					<div className='flex justify-center items-center gap-2 mb-4'>
-						<a href={signUpRoute} className='text-sm font-medium text-blue-600 hover:text-blue-700'>
+						<a href={signUpRoute} className="text-sm font-medium text-blue-500 hover:text-blue-600">
 							Don't have an account? Sign Up
 						</a>
 					</div>

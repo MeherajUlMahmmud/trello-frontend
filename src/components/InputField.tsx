@@ -1,14 +1,15 @@
 import React from 'react'
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Textarea } from './ui/textarea';
 
 
 interface InputFieldProps {
 	name: string;
 	type: string;
 	value: string;
-	label: string;
-	placeholder: string;
+	label?: string;
+	placeholder?: string;
 	onChange: (e: any) => void;
 	isRequired?: boolean;
 	autoFocus?: boolean;
@@ -17,8 +18,14 @@ interface InputFieldProps {
 const InputField: React.FC<InputFieldProps> = ({ name, type, value, label, placeholder, onChange, isRequired = false, autoFocus = false }) => {
 	return (
 		<div className="flex flex-col space-y-1.5">
-			<Label htmlFor={name}>{label}</Label>
-			<Input id={name} name={name} type={type} placeholder={placeholder} value={value} onChange={onChange} required={isRequired} autoFocus={autoFocus} />
+			<Label className='text-white' htmlFor={name}>{label}</Label>
+			{
+				type === "textarea" ? (
+					<Textarea id={name} name={name} placeholder={placeholder || label} value={value} onChange={onChange} required={isRequired} autoFocus={autoFocus} />
+				) : (
+					<Input id={name} name={name} type={type} placeholder={placeholder || label} value={value} onChange={onChange} required={isRequired} autoFocus={autoFocus} />
+				)
+			}
 		</div>
 	);
 }

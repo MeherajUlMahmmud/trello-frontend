@@ -34,4 +34,16 @@ export const projectRepository = {
 		);
 		return res;
 	},
+	updateBoardOrder: async (
+		projectId: string,
+		data: any,
+		accessToken: string
+	) => {
+		const res = await sendPatchRequest(
+			PROJECT_URL + `${projectId}/update-board-order/`,
+			data,
+			accessToken
+		);
+		return res;
+	},
 };
