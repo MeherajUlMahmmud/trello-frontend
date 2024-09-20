@@ -42,7 +42,7 @@ const DashboardSidebar: React.FC<DashboardSidebarProps> = ({
 						onClick={handleCreateWorkspace}
 					/>
 				</div>
-				<hr className='border-gray-500' />
+				<hr className='border-b border-gray-500 w-full' />
 				{workspaceList.map((workspace) => (
 					<WorkspaceDropdown
 						key={workspace.id}
