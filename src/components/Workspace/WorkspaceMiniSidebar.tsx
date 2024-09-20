@@ -17,4 +17,4 @@ const WorkspaceMiniSidebar: React.FC<WorkspaceMiniSidebarProps> = ({ showSidebar
 	)
 }
 
-export default WorkspaceMiniSidebar
+export default WorkspaceMiniSidebar;
