@@ -1,5 +1,5 @@
-import { homeRoute, loginRoute, profileRoute, signUpRoute } from '../../utils/app_routes';
-import { useAuth } from '../../context/AuthContext'; // Import the useAuth hook
+import { homeRoute, loginRoute, profileRoute, signUpRoute } from '@/utils/app_routes';
+import { useAuth } from '@/context/AuthContext'; // Import the useAuth hook
 import CustomButton, { ButtonType } from '../Common/Button';
 import { useNavigate } from 'react-router-dom';
 

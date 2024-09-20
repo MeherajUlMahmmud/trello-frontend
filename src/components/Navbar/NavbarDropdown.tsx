@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { NavbarDropdownProps } from '../../types/Navbar';
+import { NavbarDropdownProps } from '@/types/Navbar';
 
 const NavbarDropdown: React.FC<NavbarDropdownProps> = ({ title, items }) => {
 	const [isOpen, setIsOpen] = useState(false);

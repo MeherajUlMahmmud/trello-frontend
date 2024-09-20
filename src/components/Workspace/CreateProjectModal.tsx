@@ -1,12 +1,13 @@
 import { useState } from "react";
 import ErrorMessage from "../Common/ErrorMessage";
-import { projectRepository } from "../../repositories/project";
-import { closeModal } from "../../utils/utils";
+import { projectRepository } from "@/repositories/project";
+import { closeModal } from "@/utils/utils";
 import CustomButton, { ButtonType } from "../Common/Button";
+import InputField from "../InputField";
 
 interface CreateProjectModalProps {
 	setShowCreateProjectModal: React.Dispatch<React.SetStateAction<boolean>>;
-	selectedWorkspaceId: string;
+	selectedWorkspaceId: string | null;
 	setRefetchProject: React.Dispatch<React.SetStateAction<boolean>>;
 	accessToken: string;
 }
@@ -55,55 +56,57 @@ const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ setShowCreatePr
 	};
 
 	return (
-		<div className='modal__wrapper' onClick={(e) => closeModal(e, setShowCreateProjectModal)}>
-			<div className='modal'>
-				<div className='closeModal' onClick={() => setShowCreateProjectModal(false)}>
-					<i className="fa-solid fa-xmark"></i>
+		<div id="modal-bg" className='fixed inset-0 flex flex-col justify-center items-center bg-black bg-opacity-50 z-10' onClick={(e) => closeModal(e, setShowCreateProjectModal)}>
+			<div className='relative bg-[#333c44] w-3/5 max-h-[80%] p-4 rounded-md border shadow-md'>
+				<div className='absolute top-4 right-4 flex items-center gap-2 cursor-pointer' onClick={() => setShowCreateProjectModal(false)}>
+					<i className="fa-solid fa-xmark text-red-500 hover:text-white hover:bg-red-500 p-2 rounded-md"></i>
 				</div>
-				<div className='modal__header'>
+				<div className='flex items-center justify-center gap-2 p-2 text-2xl font-bold text-white'>
 					<h1>Create Project</h1>
 				</div>
-				<div className='modal__body'>
-					<form className='modal__body__form' onSubmit={(e) => handleSubmit(e)}>
-						<div className='form__group'>
-							<label htmlFor='title'>Project Title</label>
-							<input type='text' placeholder='Project Title'
-								name='title'
-								value={projectInfo.title}
-								onChange={(e) => handleChange(e)}
-								required
-								autoFocus
-							/>
-						</div>
-						<div className='form__group'>
-							<label htmlFor='description'>Project Description</label>
-							<textarea placeholder='Project Description'
-								name='description'
-								value={projectInfo.description}
-								onChange={(e) => handleChange(e)}
-							/>
-						</div>
-						{/* <div className='form__group'>
+				<form className='flex flex-col gap-4 w-full' onSubmit={(e) => handleSubmit(e)}>
+					<InputField
+						name="title"
+						type="text"
+						label="Project Title"
+						value={projectInfo.title}
+						onChange={(e) => handleChange(e)}
+						isRequired={true}
+						autoFocus={true}
+					/>
+					<InputField
+						name="description"
+						type="textarea"
+						label="Project Description"
+						value={projectInfo.description}
+						onChange={(e) => handleChange(e)}
+					/>
+					{/* <div className='form__group'>
               <label htmlFor='projectImage'>Project Image</label>
               <input type='file' name='projectImage'
                 onChange={(e) => handleChange(e)}
               />
             </div> */}
-						{
-							isError && <ErrorMessage errorMessage={errorMessage} />
-						}
-						<div className='form__actions'>
-							<CustomButton
-								text={loading ? 'Loading...' : 'Create'}
-								type={ButtonType.Submit}
-								style={{
-									backgroundColor: '#007bff',
-								}}
-								className={"w-100"}
-							/>
-						</div>
-					</form>
-				</div>
+					{
+						isError && <ErrorMessage errorMessage={errorMessage} />
+					}
+					<div className='w-fit flex justify-end gap-2'>
+						<CustomButton
+							text={loading ? 'Loading...' : 'Create'}
+							type={ButtonType.Submit}
+							className={"w-100"}
+						/>
+						<CustomButton
+							text='Cancel'
+							type={ButtonType.Button}
+							style={{
+								backgroundColor: "red",
+							}}
+							className={"w-100"}
+							onClick={() => setShowCreateProjectModal(false)}
+						/>
+					</div>
+				</form>
 			</div>
 		</div>
 	)

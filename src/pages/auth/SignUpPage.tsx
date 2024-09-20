@@ -1,11 +1,11 @@
 import { useState } from 'react';
 
-import { authRepository } from '../../repositories/auth';
-import { loginRoute } from '../../utils/app_routes';
-import { appName } from '../../utils/constants';
+import { authRepository } from '@/repositories/auth';
+import { loginRoute } from '@/utils/app_routes';
+import { appName } from '@/utils/constants';
 
-import { ButtonType } from '../../components/Common/Button';
-import ErrorMessage from '../../components/Common/ErrorMessage';
+import { ButtonType } from '@/components/Common/Button';
+import ErrorMessage from '@/components/Common/ErrorMessage';
 import {
 	Card,
 	CardContent,
@@ -14,7 +14,7 @@ import {
 	CardHeader,
 	CardTitle,
 } from "@/components/ui/card";
-import CustomButton from '../../components/Common/Button';
+import CustomButton from '@/components/Common/Button';
 import InputField from '@/components/InputField';
 
 const SignUpPage = () => {

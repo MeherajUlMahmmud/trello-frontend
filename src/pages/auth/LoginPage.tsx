@@ -9,13 +9,13 @@ import {
 	CardTitle,
 } from "@/components/ui/card";
 
-import { appName } from '../../utils/constants'
-import { dashboardRoute, forgotPasswordRoute, signUpRoute } from '../../utils/app_routes'
-import { authRepository } from '../../repositories/auth';
-import { useAuth } from '../../context/AuthContext';
+import { appName } from '@/utils/constants'
+import { dashboardRoute, forgotPasswordRoute, signUpRoute } from '@/utils/app_routes'
+import { authRepository } from '@/repositories/auth';
+import { useAuth } from '@/context/AuthContext';
 
-import ErrorMessage from '../../components/Common/ErrorMessage';
-import CustomButton, { ButtonType } from '../../components/Common/Button';
+import ErrorMessage from '@/components/Common/ErrorMessage';
+import CustomButton, { ButtonType } from '@/components/Common/Button';
 import InputField from '@/components/InputField';
 
 const LoginPage = () => {

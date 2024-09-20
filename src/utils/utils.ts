@@ -111,7 +111,7 @@ export const closeModal = (
 	setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>
 ) => {
 	e.stopPropagation();
-	if (e.target.classList.contains("modal__wrapper")) {
+	if (e.target.id === "modal-bg") {
 		setIsModalOpen(false);
 	}
 };

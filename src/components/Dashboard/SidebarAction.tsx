@@ -1,4 +1,4 @@
-import { SidebarActionItem } from '../../types/Navbar';
+import { SidebarActionItem } from '@/types/Navbar';
 
 const SidebarAction = (props: { item: SidebarActionItem }) => {
 	const { item } = props;
