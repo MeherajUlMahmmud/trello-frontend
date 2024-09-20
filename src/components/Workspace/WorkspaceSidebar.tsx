@@ -18,8 +18,8 @@ interface ProjectCardProps {
 
 const WorkspaceSidebar: React.FC<WorkspaceSidebarProps> = ({ workspace, projectList, selectedProjectId, showSidebar, setShowSidebar, setShowCreateProjectModal }) => {
 	return (
-		<div className='flex flex-col gap-2 w-[300px] h-screen'>
-			<div className='flex justify-between items-center w-full pt-2 px-4'>
+		<div className='flex flex-col gap-2 w-[270px] h-screen'>
+			<div className='flex justify-between items-center w-full py-3 px-4 border-gray-500 border-b'>
 				<div className='flex items-center gap-2'>
 					<img className='w-10 h-8 object-cover ' src='https://trello-logos.s3.amazonaws.com/c95e52bc93e8086fa1ab432d40ef5300/170.png' alt='workspace' />
 					<p className='text-lg font-medium text-white'>
@@ -32,7 +32,7 @@ const WorkspaceSidebar: React.FC<WorkspaceSidebarProps> = ({ workspace, projectL
 					<i className="fa-solid fa-chevron-left"></i>
 				</div>
 			</div>
-			<hr className='border-b mx-3' />
+			{/* <hr className='border-b border-gray-500' /> */}
 			<div className='flex flex-col gap-2 w-full'>
 				<div className='flex justify-between items-center w-full px-4'>
 					<p className='text-sm font-medium text-white'>

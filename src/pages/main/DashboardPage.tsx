@@ -11,7 +11,7 @@ import DashboardSidebar from '@/components/Dashboard/DashboardSidebar';
 import CreateWorkspaceModal from '@/components/Workspace/CreateWorkspaceModal';
 import UpdateWorkspaceModal from '@/components/Workspace/UpdateWorkspaceModal';
 import CreateProjectModal from '@/components/Workspace/CreateProjectModal';
-import { Spinner } from '@/components/Loading/Spinner';
+import Spinner from '@/components/Loading/Spinner';
 
 const DashboardPage = () => {
   const navigate = useNavigate();

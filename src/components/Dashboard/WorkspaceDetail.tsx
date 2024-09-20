@@ -6,7 +6,7 @@ import { handleAPIError } from '@/repositories/utils';
 import { projectRepository } from '@/repositories/project';
 
 import CustomButton, { ButtonType } from '../Common/Button';
-import { Spinner } from '../Loading/Spinner';
+import Spinner from '../Loading/Spinner';
 
 
 interface WorkspaceDetailProps {

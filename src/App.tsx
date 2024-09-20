@@ -4,7 +4,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { aboutRoute, contactUsRoute, dashboardRoute, homeRoute, loginRoute, profileRoute, signUpRoute } from './utils/app_routes';
 
 import { ErrorBoundary } from './components/ErrorBoundary';
-import { Spinner } from './components/Loading/Spinner';
+import Spinner from './components/Loading/Spinner';
 import Navbar from './components/Navbar/Navbar';
 import SignUpPage from './pages/auth/SignUpPage';
 
