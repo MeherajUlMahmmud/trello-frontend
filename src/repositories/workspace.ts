@@ -14,7 +14,8 @@ export const workspaceRepository = {
 		);
 		return res;
 	},
-	getWorkspace: async (id: string, accessToken: string) => {
+	getWorkspace: async (id: string | null, accessToken: string) => {
+		if (!id) return null;
 		const res = await sendGetRequest(WORKSPACE_URL + `${id}/`, accessToken);
 		return res;
 	},
