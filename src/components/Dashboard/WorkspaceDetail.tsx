@@ -1,16 +1,16 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { workspaceRepository } from '../../repositories/workspace';
-import { handleAPIError } from '../../repositories/utils';
-import { projectRepository } from '../../repositories/project';
+import { workspaceRepository } from '@/repositories/workspace';
+import { handleAPIError } from '@/repositories/utils';
+import { projectRepository } from '@/repositories/project';
 
-import '../../styles/workspace.scss';
 import CustomButton, { ButtonType } from '../Common/Button';
+import { Spinner } from '../Loading/Spinner';
 
 
 interface WorkspaceDetailProps {
-	selectedWorkspaceId: string;
+	selectedWorkspaceId: string | null;
 	setShowCreateProjectModal: React.Dispatch<React.SetStateAction<boolean>>;
 	setShowUpdateWorkspaceModal: React.Dispatch<React.SetStateAction<boolean>>;
 	refetchProject: boolean;
@@ -18,10 +18,6 @@ interface WorkspaceDetailProps {
 	accessToken: string;
 }
 
-interface ProjectCardProps {
-	project: any;
-	selectedWorkspaceId: string;
-}
 
 const WorkspaceDetail: React.FC<WorkspaceDetailProps> = ({ selectedWorkspaceId, setShowCreateProjectModal, setShowUpdateWorkspaceModal, refetchProject, setRefetchProject, accessToken }) => {
 	const navigate = useNavigate();
@@ -50,7 +46,10 @@ const WorkspaceDetail: React.FC<WorkspaceDetailProps> = ({ selectedWorkspaceId, 
 	const fetchWorkspaceDetails = async () => {
 		try {
 			const response = await workspaceRepository.getWorkspace(selectedWorkspaceId, accessToken);
-			console.log('Workspace data', response);
+			if (!response) {
+				setIsLoading(false);
+				return;
+			};
 			setCurrentWorkSpace(response.data.data);
 
 			fetchProjects();
@@ -63,7 +62,6 @@ const WorkspaceDetail: React.FC<WorkspaceDetailProps> = ({ selectedWorkspaceId, 
 	const fetchProjects = async () => {
 		try {
 			const response = await projectRepository.getProjects(projectFilters, accessToken);
-			console.log('Project list data', response);
 			const data = response.data.data;
 			setProjects(data);
 			setIsLoading(false);
@@ -75,27 +73,16 @@ const WorkspaceDetail: React.FC<WorkspaceDetailProps> = ({ selectedWorkspaceId, 
 
 	return (
 		isLoading ? (
-			<div className='workspaceDetail'>
-				<div className='workspaceDetail__top_section'>
-					<div className='top_section__img'>
-						<i className="fa fa-spinner fa-spin"></i>
-					</div>
-					<div className='top_section__content'>
-						<h1>
-							Loading...
-						</h1>
-					</div>
-				</div>
+			<div className='flex flex-col gap-4 w-4/5 p-2'>
+				<Spinner />
 			</div>
 		) : (
-			<div
-				className='flex flex-col gap-4 w-4/5'
-			>
-				<div className='flex items-center gap-4 mt-4 mr-4 mb-4' >
+			<div className='flex flex-col gap-2 w-4/5 h-fit p-2'>
+				<div className='flex items-center gap-4 mt-4' >
 					<div className='w-16 rounded-lg'>
 						<img className='w-full' src='https://trello-logos.s3.amazonaws.com/c95e52bc93e8086fa1ab432d40ef5300/170.png' alt='workspace' />
 					</div>
-					<p className='text-2xl font-bold'>
+					<p className='text-2xl text-white font-bold'>
 						{currentWorkSpace.title}
 					</p>
 					<CustomButton
@@ -105,10 +92,10 @@ const WorkspaceDetail: React.FC<WorkspaceDetailProps> = ({ selectedWorkspaceId, 
 						onClick={() => setShowUpdateWorkspaceModal(true)}
 					/>
 				</div>
-				<hr />
+				<hr className='border-b' />
 				<div className='flex flex-col gap-4 mt-4 w-full'>
 					<div className='flex justify-between items-center w-full'>
-						<div className='flex items-center gap-2'>
+						<div className='flex items-center gap-2 text-white'>
 							<i className="fa-solid fa-tasks"></i>
 							<p className='text-lg font-medium'>Your Projects</p>
 						</div>
@@ -122,9 +109,7 @@ const WorkspaceDetail: React.FC<WorkspaceDetailProps> = ({ selectedWorkspaceId, 
 					</div>
 					<div className='grid grid-cols-4 gap-4'>
 						{
-							projects.length === 0 ? (
-								<div></div>
-							) : (
+							projects.length >= 0 ? (
 								projects.map((project: any) => (
 									<ProjectCard
 										key={project.id}
@@ -132,7 +117,7 @@ const WorkspaceDetail: React.FC<WorkspaceDetailProps> = ({ selectedWorkspaceId, 
 										selectedWorkspaceId={selectedWorkspaceId}
 									/>
 								))
-							)
+							) : null
 						}
 					</div>
 				</div>
@@ -141,9 +126,13 @@ const WorkspaceDetail: React.FC<WorkspaceDetailProps> = ({ selectedWorkspaceId, 
 	)
 }
 
+interface ProjectCardProps {
+	project: any;
+	selectedWorkspaceId: string | null;
+}
 const ProjectCard: React.FC<ProjectCardProps> = ({ project, selectedWorkspaceId }) => {
 	return (
-		<div className='flex items-start gap-2 border-2 border-gray-200 px-4 py-2 text-sm font-medium text-gray-900 rounded-md hover:bg-gray-100 cursor-pointer h-20'
+		<div className='flex items-start gap-2 border border-gray-200 px-4 py-2 text-sm font-medium text-white rounded-md hover:bg-gray-500  cursor-pointer h-20'
 			onClick={() => window.location.href = `/workspace/${selectedWorkspaceId}/${project.uuid}`}
 		>
 			<div className='flex items-center gap-2'>
