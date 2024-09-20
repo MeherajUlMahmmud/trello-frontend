@@ -1,17 +1,16 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { projectRepository } from '../../repositories/project';
-import { workspaceRepository } from '../../repositories/workspace';
-import { handleAPIError } from '../../repositories/utils';
-import { useAuth } from '../../context/AuthContext';
+import { projectRepository } from '@/repositories/project';
+import { workspaceRepository } from '@/repositories/workspace';
+import { handleAPIError } from '@/repositories/utils';
+import { useAuth } from '@/context/AuthContext';
 
-import '../../styles/workspace.scss';
-
-import WorkspaceSidebar from '../../components/Workspace/WorkspaceSidebar';
-import WorkspaceMiniSidebar from '../../components/Workspace/WorkspaceMiniSidebar';
-import WorkspaceBody from '../../components/Workspace/WorkspaceBody';
-import CreateProjectModal from '../../components/Project/CreateProjectModal';
+import WorkspaceSidebar from '@/components/Workspace/WorkspaceSidebar';
+import WorkspaceMiniSidebar from '@/components/Workspace/WorkspaceMiniSidebar';
+import WorkspaceBody from '@/components/Workspace/WorkspaceBody';
+import CreateProjectModal from '@/components/Workspace/CreateProjectModal';
+import Spinner from '@/components/Loading/Spinner';
 
 const WorkspaceDetailsPage = () => {
 	const navigate = useNavigate();
@@ -50,7 +49,10 @@ const WorkspaceDetailsPage = () => {
 	const fetchWorkspaceDetails = async () => {
 		try {
 			const response = await workspaceRepository.getWorkspace(selectedWorkspaceId, tokens.access);
-			console.log('Workspace data', response);
+			if (!response) {
+				setIsLoading(false);
+				return;
+			}
 			setWorkspace(response.data.data);
 
 			fetchProjects();
@@ -63,7 +65,6 @@ const WorkspaceDetailsPage = () => {
 	const fetchProjects = async () => {
 		try {
 			const response = await projectRepository.getProjects(projectFilters, tokens.access);
-			console.log('Project list', response);
 			const data = response.data.data;
 			setProjects(data);
 
@@ -85,10 +86,10 @@ const WorkspaceDetailsPage = () => {
 	};
 
 	return (
-		<div className='workspaceDetailsPage'>
+		<div className='flex w-full h-[calc(100vh-60px)] overflow-hidden'>
 			{
 				isLoading ? (
-					<i className="fa fa-spinner fa-spin"></i>
+					<Spinner />
 				) : (
 					<>
 						{
@@ -130,4 +131,4 @@ const WorkspaceDetailsPage = () => {
 	)
 }
 
-export default WorkspaceDetailsPage
+export default WorkspaceDetailsPage;
