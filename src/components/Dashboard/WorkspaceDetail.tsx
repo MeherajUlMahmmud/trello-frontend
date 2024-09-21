@@ -5,7 +5,7 @@ import { workspaceRepository } from '@/repositories/workspace';
 import { handleAPIError } from '@/repositories/utils';
 import { projectRepository } from '@/repositories/project';
 
-import CustomButton, { ButtonType } from '../Common/Button';
+import CustomButton, { ButtonType } from '../CustomButton';
 import Spinner from '../Loading/Spinner';
 
 
@@ -77,10 +77,10 @@ const WorkspaceDetail: React.FC<WorkspaceDetailProps> = ({ selectedWorkspaceId, 
 				<Spinner />
 			</div>
 		) : (
-			<div className='flex flex-col gap-2 w-4/5 h-fit p-2'>
+			<div className='flex flex-col w-full md:w-4/5 gap-2  h-fit p-2'>
 				<div className='flex items-center gap-4 mt-4' >
 					<div className='w-16 rounded-lg'>
-						<img className='w-full' src='https://trello-logos.s3.amazonaws.com/c95e52bc93e8086fa1ab432d40ef5300/170.png' alt='workspace' />
+						<img className='w-14 h-14 object-cover rounded-md' src={currentWorkSpace.image || 'https://trello-logos.s3.amazonaws.com/c95e52bc93e8086fa1ab432d40ef5300/170.png'} alt='workspace' />
 					</div>
 					<p className='text-2xl text-white font-bold'>
 						{currentWorkSpace.title}
@@ -107,7 +107,7 @@ const WorkspaceDetail: React.FC<WorkspaceDetailProps> = ({ selectedWorkspaceId, 
 							onClick={() => setShowCreateProjectModal(true)}
 						/>
 					</div>
-					<div className='grid grid-cols-4 gap-4'>
+					<div className='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4'>
 						{
 							projects.length >= 0 ? (
 								projects.map((project: any) => (
@@ -135,9 +135,9 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, selectedWorkspaceId 
 		<div className='flex items-start gap-2 border border-gray-200 px-4 py-2 text-sm font-medium text-white rounded-md hover:bg-gray-500  cursor-pointer h-20'
 			onClick={() => window.location.href = `/workspace/${selectedWorkspaceId}/${project.uuid}`}
 		>
-			<div className='flex items-center gap-2'>
-				<i className="fa-solid fa-project-diagram"></i>
-				<span>{project.title.length > 30 ? project.title.slice(0, 30) + '...' : project.title}</span>
+			<div className='flex items-start gap-2'>
+				<i className="fa-solid fa-project-diagram text-lg"></i>
+				<p className='text-lg md:text-sm lg:text-lg font-medium text-white'>{project.title.length > 30 ? project.title.slice(0, 30) + '...' : project.title}</p>
 			</div>
 		</div>
 	)

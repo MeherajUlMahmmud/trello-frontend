@@ -6,7 +6,7 @@ import { projectRepository } from '@/repositories/project';
 import { handleAPIError } from '@/repositories/utils';
 import { boardRepository } from '@/repositories/board';
 import { cardRepository } from '@/repositories/card';
-import CustomButton, { ButtonType } from '../Common/Button';
+import CustomButton, { ButtonType } from '../CustomButton';
 import InputField from '../InputField';
 import Spinner from '../Loading/Spinner';
 
@@ -44,7 +44,7 @@ const WorkspaceBody = ({ showSidebar, selectedProjectId, accessToken }: { showSi
 	const fetchProjectDetails = async () => {
 		try {
 			const response = await projectRepository.getProject(selectedProjectId, accessToken);
-			const data = response.data;
+			const data = response.data.data;
 			setProject(data);
 			setUpdatedProject({
 				id: data.id,
@@ -194,7 +194,7 @@ const WorkspaceBody = ({ showSidebar, selectedProjectId, accessToken }: { showSi
 	return (
 		<div className='bg-[#60436f] w-full' style={{ width: showSidebar ? 'calc(100% - 270px)' : 'calc(100% - 50px)' }}>
 			<div className='flex justify-between items-center border-b border-l border-r border-gray-500 w-full bg-gray-800'>
-				<div className='flex justify-between items-center w-full'>
+				<div className='flex justify-between items-center w-full h-14'>
 					<div className='flex justify-center items-center gap-2 px-4 py-2 cursor-pointer rounded-md'>
 						{!isLoading && projectNameClicked ? (
 							<input
@@ -301,9 +301,6 @@ const Board = ({ board, index, accessToken, navigate }: { board: any, index: num
 	const [boardNameClicked, setBoardNameClicked] = useState<boolean>(false);
 	const boardNameInputRef = useRef<HTMLInputElement>(null);
 
-	const [menuVisible, setMenuVisible] = useState(false);
-	const boardEllipsisRef = useRef<HTMLInputElement>(null);
-
 	useEffect(() => {
 		const handleClickOutside = (event: MouseEvent) => {
 			if (boardNameInputRef.current && !boardNameInputRef.current.contains(event.target as Node)) {
@@ -316,19 +313,6 @@ const Board = ({ board, index, accessToken, navigate }: { board: any, index: num
 			document.removeEventListener('mousedown', handleClickOutside);
 		};
 	}, []);
-
-	// Handle clicking outside the menu to close it
-	useEffect(() => {
-		const handleClickOutside = (event: MouseEvent) => {
-			if (boardEllipsisRef.current && !boardEllipsisRef.current.contains(event.target as Node)) {
-				setMenuVisible(false);
-			}
-		};
-		document.addEventListener('mousedown', handleClickOutside);
-		return () => {
-			document.removeEventListener('mousedown', handleClickOutside);
-		};
-	}, [boardEllipsisRef]);
 
 	useEffect(() => {
 		fetchCards();
@@ -412,21 +396,9 @@ const Board = ({ board, index, accessToken, navigate }: { board: any, index: num
 								</p>
 							)}
 						</div>
-						<div className='flex text-white cursor-pointer p-1 rounded-md hover:bg-gray-700' ref={boardEllipsisRef}>
-							<i className="fa-solid fa-ellipsis"
-							// onClick={() => setMenuVisible(!menuVisible)}
-							/>
+						<div className='flex text-white cursor-pointer p-1 rounded-md hover:bg-gray-700'>
+							<i className="fa-solid fa-ellipsis" />
 						</div>
-						{/* Context Menu */}
-						{/* {menuVisible && (
-							<div className='absolute top-11 mt-2 right-0 bg-gray-800 text-white p-2 rounded shadow-lg'>
-								<ul className="space-y-1">
-									<li className='hover:bg-gray-700 p-2 cursor-pointer'>Option 1</li>
-									<li className='hover:bg-gray-700 p-2 cursor-pointer'>Option 2</li>
-									<li className='hover:bg-gray-700 p-2 cursor-pointer'>Option 3</li>
-								</ul>
-							</div>
-						)} */}
 					</div>
 
 					{

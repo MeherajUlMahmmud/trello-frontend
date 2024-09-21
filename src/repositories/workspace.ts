@@ -26,7 +26,8 @@ export const workspaceRepository = {
 		const res = await sendPostRequest(
 			ApiRoutes.WORKSPACE_URL + "create/",
 			data,
-			accessToken
+			accessToken,
+			true
 		);
 		return res;
 	},
@@ -34,7 +35,8 @@ export const workspaceRepository = {
 		const res = await sendPatchRequest(
 			ApiRoutes.WORKSPACE_URL + `${id}/update/`,
 			data,
-			accessToken
+			accessToken,
+			true
 		);
 		return res;
 	},

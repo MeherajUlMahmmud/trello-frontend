@@ -1,5 +1,5 @@
 import React from 'react'
-import CustomButton, { ButtonType } from '../Common/Button';
+import CustomButton, { ButtonType } from '../CustomButton';
 
 interface WorkspaceSidebarProps {
 	workspace: any;
@@ -21,7 +21,7 @@ const WorkspaceSidebar: React.FC<WorkspaceSidebarProps> = ({ workspace, projectL
 		<div className='flex flex-col gap-2 w-[270px] h-screen'>
 			<div className='flex justify-between items-center w-full py-3 px-4 border-gray-500 border-b'>
 				<div className='flex items-center gap-2'>
-					<img className='w-10 h-8 object-cover ' src='https://trello-logos.s3.amazonaws.com/c95e52bc93e8086fa1ab432d40ef5300/170.png' alt='workspace' />
+					<img className='w-10 h-8 object-cover ' src={workspace.image || 'https://trello-logos.s3.amazonaws.com/c95e52bc93e8086fa1ab432d40ef5300/170.png'} alt='workspace' />
 					<p className='text-lg font-medium text-white'>
 						{workspace.title}
 					</p>
@@ -41,7 +41,7 @@ const WorkspaceSidebar: React.FC<WorkspaceSidebarProps> = ({ workspace, projectL
 					<CustomButton
 						icon='fa-solid fa-plus'
 						type={ButtonType.Button}
-						className='px-3 bg-white text-black hover:text-white'
+						className='px-3 bg-black text-white hover:text-white'
 						onClick={() => setShowCreateProjectModal(true)}
 					/>
 				</div>
@@ -68,7 +68,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, isActive, workspaceI
 			href={`/workspace/${workspaceId}/${project.uuid}`}
 			className={`flex items-center gap-2 py-2 px-4 text-white ${isActive ? 'bg-gray-700' : ''}`}>
 			<img className='w-10 h-7 object-cover'
-				src='https://trello-logos.s3.amazonaws.com/c95e52bc93e8086fa1ab432d40ef5300/170.png'
+				src={project.image || 'https://trello-logos.s3.amazonaws.com/c95e52bc93e8086fa1ab432d40ef5300/170.png'}
 				alt='workspace' />
 			<p className='text-sm font-medium'>
 				{project.title.length > 20 ? project.title.slice(0, 20) + '...' : project.title}

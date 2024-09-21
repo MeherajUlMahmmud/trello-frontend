@@ -3,6 +3,7 @@ import { deleteLocalStorage, loadLocalStorage, saveLocalStorage } from '../utils
 
 interface AuthContextType {
 	user: any;
+	setUser: React.Dispatch<React.SetStateAction<any>>;
 	tokens: any;
 	login: (user: any, tokens: any) => void;
 	logout: () => void;
@@ -44,7 +45,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 	};
 
 	return (
-		<AuthContext.Provider value={{ user, tokens, login, logout }}>
+		<AuthContext.Provider value={{ user, setUser, tokens, login, logout }}>
 			{children}
 		</AuthContext.Provider>
 	);

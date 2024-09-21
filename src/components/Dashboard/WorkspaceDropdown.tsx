@@ -1,3 +1,4 @@
+import { DashboardSidebarStyles } from "@/utils/styles";
 import React, { useState, useCallback } from "react";
 
 interface WorkspaceItem {
@@ -32,12 +33,12 @@ const WorkspaceDropdown: React.FC<WorkspaceDropdownProps> = ({
 	}, [item.id, setSelectedWorkspaceId, setFocusedWorkspaceId]);
 
 	return (
-		<div className={`flex flex-col items-center gap-2 w-full rounded`}>
+		<div className={`${DashboardSidebarStyles.workspaceDropdownWrapper}`}>
 			<button
-				className={`flex items-center justify-between w-full px-4 py-2 text-sm font-medium text-left rounded-md hover:bg-gray-100 hover:text-black ${selectedWorkspaceId === item.id ? 'bg-gray-100 text-black' : 'text-white'}`}
+				className={`${DashboardSidebarStyles.workspaceDropdownButton} ${selectedWorkspaceId === item.id ? `${DashboardSidebarStyles.workspaceDropdownButtonSelected}` : `${DashboardSidebarStyles.workspaceDropdownButtonNotSelected}`}`}
 				onClick={toggleDropdown}
 			>
-				<div className="flex items-center gap-2">
+				<div className={`${DashboardSidebarStyles.workspaceDropdownTitleWrapper}`}>
 					<i className="fa-solid fa-building" />
 					<span className="ml-1">{item.title}</span>
 				</div>
@@ -88,7 +89,7 @@ interface DropdownItemProps {
 
 const DropdownItem: React.FC<DropdownItemProps> = React.memo(({ icon, text, onClick, isSelected }) => (
 	<button
-		className={`flex items-center px-4 py-2 text-sm font-medium rounded-md   cursor-pointer gap-2 w-full ${isSelected ? 'bg-gray-100 text-black hover:bg-gray-100' : 'text-white hover:bg-gray-500 hover:text-black'} `}
+		className={`${DashboardSidebarStyles.workspaceDropdownItem} ${isSelected ? `${DashboardSidebarStyles.workspaceDropdownItemSelected}` : `${DashboardSidebarStyles.workspaceDropdownItemNotSelected}`}`}
 		onClick={onClick}
 	>
 		<i className={icon} />

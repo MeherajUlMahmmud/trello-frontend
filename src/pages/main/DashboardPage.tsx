@@ -12,9 +12,13 @@ import CreateWorkspaceModal from '@/components/Workspace/CreateWorkspaceModal';
 import UpdateWorkspaceModal from '@/components/Workspace/UpdateWorkspaceModal';
 import CreateProjectModal from '@/components/Workspace/CreateProjectModal';
 import Spinner from '@/components/Loading/Spinner';
+import Toast from '@/components/Toast';
+import { ToastPosition } from '@/utils/toast';
 
 const DashboardPage = () => {
   const navigate = useNavigate();
+
+  const [toastList, setToastList] = useState<any[]>([]);
 
   const user = loadLocalStorage('user');
   const tokens = loadLocalStorage('tokens');
@@ -75,7 +79,7 @@ const DashboardPage = () => {
 
   return (
     <>
-      <div className='maxWidth flex justify-center gap-4  w-1/5 p-2'>
+      <div className='flex justify-center gap-4 p-2 max-w-7xl mx-auto w-full'>
         {isLoading ? (
           <div className='flex flex-col gap-4 w-full'>
             <Spinner />
@@ -100,7 +104,7 @@ const DashboardPage = () => {
             />
           </>
         ) : (
-          <div className='maxWidth'>
+          <div className='flex justify-center gap-4 p-2 max-w-7xl mx-auto w-full'>
             <h1>No Workspaces</h1>
           </div>
         )}
@@ -112,6 +116,8 @@ const DashboardPage = () => {
           selectedWorkspaceId={selectedWorkspaceId}
           setRefetchProject={setRefetchProject}
           accessToken={tokens.access}
+          toastList={toastList}
+          setToastList={setToastList}
         />
       }
 
@@ -121,6 +127,8 @@ const DashboardPage = () => {
           setShowCreateWorkspaceModal={setShowCreateWorkspaceModal}
           setRefetchWorkspace={setRefetchWorkspace}
           accessToken={tokens.access}
+          toastList={toastList}
+          setToastList={setToastList}
         />
       }
 
@@ -131,8 +139,14 @@ const DashboardPage = () => {
           setShowUpdateWorkspaceModal={setShowUpdateWorkspaceModal}
           setRefetchWorkspace={setRefetchWorkspace}
           accessToken={tokens.access}
+          toastList={toastList}
+          setToastList={setToastList}
         />
       }
+      <Toast
+        toastList={toastList}
+        position={ToastPosition.TopRight}
+      />
     </>
   )
 }

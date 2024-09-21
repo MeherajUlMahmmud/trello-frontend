@@ -2,8 +2,7 @@ import { useState } from 'react';
 
 import { authRepository } from '@/repositories/auth';
 
-import { ButtonType } from '@/components/Common/Button';
-import ErrorMessage from '@/components/Common/ErrorMessage';
+import { ButtonType } from '@/components/CustomButton';
 import {
 	Card,
 	CardContent,
@@ -12,9 +11,10 @@ import {
 	CardHeader,
 	CardTitle,
 } from "@/components/ui/card";
-import CustomButton from '@/components/Common/Button';
+import CustomButton from '@/components/CustomButton';
 import InputField from '@/components/InputField';
 import { AppConstants, AppUrls } from '@/utils/constants';
+import ErrorMessage from '@/components/ErrorMessage';
 
 const SignUpPage = () => {
 	const [signUpData, setSignUpData] = useState({

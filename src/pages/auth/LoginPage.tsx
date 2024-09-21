@@ -12,8 +12,8 @@ import {
 import { authRepository } from '@/repositories/auth';
 import { useAuth } from '@/context/AuthContext';
 
-import ErrorMessage from '@/components/Common/ErrorMessage';
-import CustomButton, { ButtonType } from '@/components/Common/Button';
+import ErrorMessage from '@/components/ErrorMessage';
+import CustomButton, { ButtonType } from '@/components/CustomButton';
 import InputField from '@/components/InputField';
 import { AppConstants, AppUrls } from '@/utils/constants';
 

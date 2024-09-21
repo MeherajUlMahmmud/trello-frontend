@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { dashboardRoute } from '../utils/app_routes';
 import { loadLocalStorage } from '../utils/persistLocalStorage';
+import { AppUrls } from '@/utils/constants';
 
 const HomePage = () => {
 	const navigate = useNavigate();
@@ -11,7 +11,7 @@ const HomePage = () => {
 		const tokens = loadLocalStorage('tokens');
 
 		if (user && tokens) {
-			navigate(dashboardRoute);
+			navigate(AppUrls.dashboardRoute);
 		}
 	}, [navigate]);
 

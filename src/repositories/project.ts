@@ -25,7 +25,8 @@ export const projectRepository = {
 		const res = await sendPostRequest(
 			ApiRoutes.PROJECT_URL + "create/",
 			data,
-			accessToken
+			accessToken,
+			true
 		);
 		return res;
 	},
@@ -33,7 +34,8 @@ export const projectRepository = {
 		const res = await sendPatchRequest(
 			ApiRoutes.PROJECT_URL + `${id}/update/`,
 			data,
-			accessToken
+			accessToken,
+			true
 		);
 		return res;
 	},
