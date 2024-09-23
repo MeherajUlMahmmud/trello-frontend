@@ -11,6 +11,8 @@ import WorkspaceMiniSidebar from '@/components/Workspace/WorkspaceMiniSidebar';
 import WorkspaceBody from '@/components/Workspace/WorkspaceBody';
 import CreateProjectModal from '@/components/Workspace/CreateProjectModal';
 import Spinner from '@/components/Loading/Spinner';
+import Toast from '@/components/Toast';
+import { ToastPosition } from '@/utils/toast';
 
 const WorkspaceDetailsPage = () => {
 	const navigate = useNavigate();
@@ -19,6 +21,8 @@ const WorkspaceDetailsPage = () => {
 
 	const selectedWorkspaceId = window.location.pathname.split('/')[2];
 	const selectedProjectId = window.location.pathname.split('/')[3];
+
+	const [toastList, setToastList] = useState<any[]>([]);
 
 	const projectFilters = {
 		workspace: selectedWorkspaceId,
@@ -113,6 +117,8 @@ const WorkspaceDetailsPage = () => {
 							showSidebar={showSidebar}
 							selectedProjectId={selectedProjectId}
 							accessToken={tokens.access}
+							toastList={toastList}
+							setToastList={setToastList}
 						/>
 					</>
 				)
@@ -125,8 +131,14 @@ const WorkspaceDetailsPage = () => {
 					selectedWorkspaceId={selectedWorkspaceId}
 					setRefetchProject={setRefetchProject}
 					accessToken={tokens.access}
+					toastList={toastList}
+					setToastList={setToastList}
 				/>
 			}
+			<Toast
+				toastList={toastList}
+				position={ToastPosition.TopRight}
+			/>
 		</div>
 	)
 }
