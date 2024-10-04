@@ -12,7 +12,7 @@ import CreateWorkspaceModal from '@/components/Workspace/CreateWorkspaceModal';
 import UpdateWorkspaceModal from '@/components/Workspace/UpdateWorkspaceModal';
 import CreateProjectModal from '@/components/Workspace/CreateProjectModal';
 import Spinner from '@/components/Loading/Spinner';
-import Toast from '@/components/Toast';
+import Toast from '@/components/Common/Toast';
 import { ToastPosition } from '@/utils/toast';
 
 const DashboardPage = () => {

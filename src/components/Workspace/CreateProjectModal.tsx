@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { projectRepository } from "@/repositories/project";
 import { closeModal } from "@/utils/utils";
-import CustomButton, { ButtonType } from "../CustomButton";
-import InputField from "../InputField";
+import CustomButton, { ButtonType } from "../Common/CustomButton";
+import InputField from "../Common/InputField";
 import { ModalStyles } from "@/utils/styles";
 import { AppConstants } from "@/utils/constants";
 import { createToastMessage, ToastType } from "@/utils/toast";

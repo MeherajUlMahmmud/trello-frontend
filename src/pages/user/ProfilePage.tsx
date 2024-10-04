@@ -5,15 +5,15 @@ import { useAuth } from '@/context/AuthContext';
 import { handleAPIError } from '@/repositories/utils';
 import { AppConstants, AppUrls, Assets } from '@/utils/constants';
 
-import CustomButton, { ButtonType } from '@/components/CustomButton';
-import InputField from '@/components/InputField';
+import CustomButton, { ButtonType } from '@/components/Common/CustomButton';
+import InputField from '@/components/Common/InputField';
 import { closeModal } from '@/utils/utils';
 import React from 'react';
 import { userRepository } from '@/repositories/user';
 import { saveLocalStorage } from '@/utils/persistLocalStorage';
 import Spinner from '@/components/Loading/Spinner';
 import { authRepository } from '@/repositories/auth';
-import Toast from '@/components/Toast';
+import Toast from '@/components/Common/Toast';
 import { createToastMessage, ToastPosition, ToastType } from '@/utils/toast';
 import { ModalStyles } from '@/utils/styles';
 

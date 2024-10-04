@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 import { AppUrls } from './utils/constants';
 
-import { ErrorBoundary } from './components/ErrorBoundary';
+import { ErrorBoundary } from './components/Common/ErrorBoundary';
 import Spinner from './components/Loading/Spinner';
 import Navbar from './components/Navbar/Navbar';
 import SignUpPage from './pages/auth/SignUpPage';

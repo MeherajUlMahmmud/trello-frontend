@@ -1,5 +1,5 @@
 import React from 'react'
-import CustomButton, { ButtonType } from '../CustomButton';
+import CustomButton, { ButtonType } from '../Common/CustomButton';
 
 interface WorkspaceSidebarProps {
 	workspace: any;

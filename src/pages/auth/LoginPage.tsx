@@ -12,9 +12,9 @@ import {
 import { authRepository } from '@/repositories/auth';
 import { useAuth } from '@/context/AuthContext';
 
-import ErrorMessage from '@/components/ErrorMessage';
-import CustomButton, { ButtonType } from '@/components/CustomButton';
-import InputField from '@/components/InputField';
+import ErrorMessage from '@/components/Common/ErrorMessage';
+import CustomButton, { ButtonType } from '@/components/Common/CustomButton';
+import InputField from '@/components/Common/InputField';
 import { AppConstants, AppUrls } from '@/utils/constants';
 
 const LoginPage = () => {

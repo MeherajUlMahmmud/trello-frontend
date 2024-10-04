@@ -1,4 +1,4 @@
-export const loadSessionStorage = (value) => {
+export const loadSessionStorage = (value: string) => {
 	try {
 		const serializedState = window.sessionStorage.getItem(value);
 
@@ -15,7 +15,7 @@ export const loadSessionStorage = (value) => {
 	}
 };
 
-export const saveSessionStorage = (name, value) => {
+export const saveSessionStorage = (name: string, value: any) => {
 	try {
 		const serializedState = JSON.stringify(value);
 		window.sessionStorage.setItem(name, serializedState);
@@ -24,7 +24,7 @@ export const saveSessionStorage = (name, value) => {
 	}
 };
 
-export const deleteSessionStorage = (value) => {
+export const deleteSessionStorage = (value: string) => {
 	try {
 		window.sessionStorage.removeItem(value);
 	} catch (err) {

@@ -1,5 +1,5 @@
 import { useAuth } from '@/context/AuthContext'; // Import the useAuth hook
-import CustomButton, { ButtonType } from '../CustomButton';
+import CustomButton, { ButtonType } from '../Common/CustomButton';
 import { useNavigate } from 'react-router-dom';
 import { AppUrls, Assets } from '@/utils/constants';
 import { useState } from 'react';

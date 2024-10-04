@@ -1,6 +1,6 @@
 import React from 'react';
-import CustomButton from '../CustomButton';
-import { ButtonType } from '../CustomButton';
+import CustomButton from '../Common/CustomButton';
+import { ButtonType } from '../Common/CustomButton';
 import WorkspaceDropdown from './WorkspaceDropdown';
 import { DashboardSidebarStyles } from '@/utils/styles';
 

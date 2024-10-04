@@ -11,7 +11,7 @@ import WorkspaceMiniSidebar from '@/components/Workspace/WorkspaceMiniSidebar';
 import WorkspaceBody from '@/components/Workspace/WorkspaceBody';
 import CreateProjectModal from '@/components/Workspace/CreateProjectModal';
 import Spinner from '@/components/Loading/Spinner';
-import Toast from '@/components/Toast';
+import Toast from '@/components/Common/Toast';
 import { ToastPosition } from '@/utils/toast';
 
 const WorkspaceDetailsPage = () => {
